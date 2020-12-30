@@ -15,6 +15,8 @@ def question_1(div_by, not_mult_of):
     print(my_list)
 #question_1(7, 5)
 
+
+
 '''Question 2
 Level 1
 
@@ -27,9 +29,27 @@ Then, the output should be:
 40320
 n! = n x (n-1)'''
 
-def factorial(num):
+def question2(num):
     if num == 0:
         return 1
-    return num * factorial(num - 1)
-#print(factorial(8))
+    return num * question2(num - 1)
+#print(question2(8))
+
+
+
+'''Question:
+With a given integral number n, write a program to generate a dictionary that contains (i, i*i) such that is an integral number between 1 and n (both included). 
+and then the program should print the dictionary.
+Suppose the following input is supplied to the program:
+8
+Then, the output should be:
+{1: 1, 2: 4, 3: 9, 4: 16, 5: 25, 6: 36, 7: 49, 8: 64}'''
+
+def question3(num):
+    my_dict = {}
+    n = num
+    for i in range(1, n + 1):
+        my_dict[i] = i * i
+    print(my_dict)
+#question3(8)
 

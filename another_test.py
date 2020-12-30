@@ -1,2 +1,0 @@
-def another():
-    pass

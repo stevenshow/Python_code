@@ -15,3 +15,21 @@ def question_1(div_by, not_mult_of):
     print(my_list)
 #question_1(7, 5)
 
+'''Question 2
+Level 1
+
+Question:
+Write a program which can compute the factorial of a given numbers.
+The results should be printed in a comma-separated sequence on a single line.
+Suppose the following input is supplied to the program:
+8
+Then, the output should be:
+40320
+n! = n x (n-1)'''
+
+def factorial(num):
+    if num == 0:
+        return 1
+    return num * factorial(num - 1)
+#print(factorial(8))
+

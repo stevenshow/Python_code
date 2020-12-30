@@ -71,5 +71,32 @@ def question4():
     my_tuple = tuple(my_list)
     print(my_list)
     print(my_tuple)
-    
-question4()
+#question4()
+#----------------------------------------#
+
+#----------------------------------------#
+'''Question 5
+Level 1
+
+Question:
+Define a class which has at least two methods:
+getString: to get a string from console input
+printString: to print the string in upper case.
+Also please include simple test function to test the class methods.
+
+Hints:
+Use __init__ method to construct some parameters'''
+
+class InputOutString(object):
+    def __init__(self):
+        self.s = ""
+    def getString(self):
+        self.s = input('Please enter a string to be capitalized: ')
+    def capitalizeString(self):
+        print(self.s.upper())
+#strObj = InputOutString()
+#strObj.getString()
+#strObj.capitalizeString() 
+#----------------------------------------#
+
+#----------------------------------------#

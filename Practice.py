@@ -1,5 +1,4 @@
-'''
-Question 1
+'''Question 1
 Level 1
 
 Question:
@@ -14,9 +13,9 @@ def question_1(div_by, not_mult_of):
             my_list.append(str(num))
     print(my_list)
 #question_1(7, 5)
+#----------------------------------------#
 
-
-
+#----------------------------------------#
 '''Question 2
 Level 1
 
@@ -34,9 +33,9 @@ def question2(num):
         return 1
     return num * question2(num - 1)
 #print(question2(8))
+#----------------------------------------#
 
-
-
+#----------------------------------------#
 '''Question:
 With a given integral number n, write a program to generate a dictionary that contains (i, i*i) such that is an integral number between 1 and n (both included). 
 and then the program should print the dictionary.
@@ -52,4 +51,25 @@ def question3(num):
         my_dict[i] = i * i
     print(my_dict)
 #question3(8)
+#----------------------------------------#
 
+#----------------------------------------#
+'''Question 4
+Level 1
+
+Question:
+Write a program which accepts a sequence of comma-separated numbers from console and generate a list and a tuple which contains every number.
+Suppose the following input is supplied to the program:
+34,67,55,33,12,98
+Then, the output should be:
+['34', '67', '55', '33', '12', '98']
+('34', '67', '55', '33', '12', '98')'''
+
+def question4():
+    numbers = input("Input a sequence of comma separated numbers like so '34,67,55,33,12,98' and it will be turned into a list and tuple: ")
+    my_list = numbers.split(',')
+    my_tuple = tuple(my_list)
+    print(my_list)
+    print(my_tuple)
+    
+question4()

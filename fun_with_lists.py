@@ -1,4 +1,5 @@
 import names
+import random
 import matplotlib.pylab as plt
 
 my_list = ['Steven', 'Kayla', 'Kit Kat', 'Nacho']
@@ -21,7 +22,7 @@ def count_names(name_list):
 
 def get_name_list():
     name_list = []
-    for name in range(10):
+    for name in range(10000):
         name_list.append(names.get_first_name())
     return name_list
 
@@ -31,10 +32,10 @@ def plot_dict():
     name_dict = count_names(get_name_list())
     lists = sorted(name_dict.items(), key = lambda kv:kv[1], reverse = True)
     x, y = zip(*lists)
-    plt.plot(x,y)
+    plt.plot(y)
     plt.show()
 
-plot_dict()
+#plot_dict()
 
 #print(name_list)
 
@@ -43,3 +44,15 @@ plot_dict()
     
 #if human[0] in name_list:
 #    print(f'{human[0]} was found in the List: ', name_list)
+
+def plot_raisins(num):
+    raisin_count = []
+    for i in range(num):
+        raisin_count.append(random.randint(25,39))
+    raisin_count.sort()
+    
+    plt.plot(raisin_count)
+    plt.show()
+    print(raisin_count)
+     
+plot_raisins(100)

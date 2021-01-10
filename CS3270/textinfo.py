@@ -7,7 +7,7 @@ import os
 # [X] White space count
 # [X] Vowels - {'a': 102, 'e': 165, 'i': 68, 'o': 93, 'u': 21} 
 # [X] Consonants count
-# [] Average words per sentence count (rounded to nearest 10th)
+# [X] Average words per sentence count (rounded to nearest 10th)
 
 def read_file():
     try:

@@ -28,13 +28,14 @@ def text_info(text):
     upper_count = sum(map(str.isupper, text))
     lower_count = sum(map(str.islower, text))
     white_space = sum(map(str.isspace, text))
-    vowels = {}
+    vowels = {'a': 0, 'e': 0, 'i': 0, 'o': 0, 'u': 0}
     consonants = 0
     digits = 0
     
     #Counts number of Vowels, Consonants, and Digits
     for letter in text:
         if letter.isalpha() and letter in vowel_chars:
+            #this statement is if the vowel dictionary is not already populated with vowels
             if letter not in vowels:
                 vowels[letter.lower()] = 1
             else: 
@@ -60,22 +61,25 @@ def text_info(text):
     if len(counter_dict) > 0:
         sentences = len(counter_dict)
         avg_wps = (sum(counter_dict.values())/ sentences)
+        avg_wps = round(avg_wps, 1)
     else:
+        sentences = 0
         avg_wps = 0    
     
-    print_text_info(character_count, upper_count, lower_count, 
-        digits, white_space, vowels, consonants, sentences, avg_wps)
+    info = {'characters': character_count, 'upper': upper_count, 'lower': lower_count, 'digits': digits,
+    'whitespace': white_space, 'vowels': vowels, 'consonants': consonants, 'sentences': sentences, 'avg_wps': avg_wps}
+    print_text_info(info)
 
-def print_text_info(characters, upper_case, lower_case, digits, white_space, vowels, consonants, sentences, avg_wps):
+def print_text_info(info):
     print(f'''
-    Characters:  {characters}
-    Upper case:  {upper_case}
-    Lower case:  {lower_case}
-    Digits:      {digits}
-    White space: {white_space}
-    Vowels:      {vowels}
-    Consonants:  {consonants}
-    Sentences:   {sentences}
-    Avg words per sentences: {avg_wps}''')
+    Characters:  {info['characters']}
+    Upper case:  {info['upper']}
+    Lower case:  {info['lower']}
+    Digits:      {info['digits']}
+    White space: {info['whitespace']}
+    Vowels:      {info['vowels']}
+    Consonants:  {info['consonants']}
+    Sentences:   {info['sentences']}
+    Avg words per sentences: {info['avg_wps']}''')
 
 read_file()

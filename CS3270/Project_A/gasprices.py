@@ -1,8 +1,8 @@
 # pylint: disable=invalid-name
 # [X] Open and Read file of gas prices
 # [X] Separate the dates and prices for each year
-# [] Calculate low, average, and high for EACH YEAR
-# [] Calculate average price for each month
+# [X] Calculate low, average, and high for EACH YEAR
+# [X] Calculate average price for each month
 # [] Export report to file gas_report.txt
 import calendar
 from statistics import mean

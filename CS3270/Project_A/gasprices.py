@@ -4,6 +4,8 @@
 # [] Calculate low, average, and high for EACH YEAR
 # [] Calculate average price for each month
 # [] Export report to file gas_report.txt
+import calendar
+from statistics import mean
 
 def read_file():
     with open('/home/steven/Documents/Python_code/CS3270/Project_A/gas_prices.txt', 'r') as f:
@@ -32,16 +34,39 @@ def process_file():
             else:    
                 year_dict[month].append(month_data[1])
         else:
-            export_year_info(year_dict, curr_year)
+            print_year_info(year_dict, curr_year)
+            print_month_info(year_dict)
             year_counter += 1
-            break
+            curr_year += 1
+            year_dict = {}
+            continue
+    print_year_info(year_dict, curr_year)
+    print_month_info(year_dict)
             
 
-def export_year_info(year_dict, year):
+def print_year_info(year_dict, year):
     with open('/home/steven/Documents/Python_code/CS3270/Project_A/gas_report.txt', 'a+') as out:
         min_price = float(get_min(year_dict))
         max_price = float(get_max(year_dict))
-        print(f'Low: {round(min_price, 3)}, Avg:___, High: {round(max_price, 3)}')
+        average = get_average_year(year_dict)
+        print(f'\n{year}:')
+        print(f'\tLow: {round(min_price, 2)}, Avg:{round(average, 2)}, High: {round(max_price, 2)}')
+        
+
+def print_month_info(year_dict):
+    #calendar.month_name[number of month 1-12]
+    counter = 0
+    curr_month = 1                              #Need to figure out how to get the dictionary key in the first slot ***
+    for line in year_dict:                      #Need to print the prices of the months gas average in a neat column
+        counter == line
+        while(line == curr_month):
+            average_month = mean(float(n) if n else 0 for n in year_dict[line])
+            print(f'\t{calendar.month_name[curr_month]}\t${round(average_month, 2)}')
+            counter += 1
+            curr_month += 1
+            break
+        else:
+            break
 
 def get_min(year_dict):
     #min_key = min(year_dict, key=int)
@@ -69,11 +94,21 @@ def get_max(year_dict):
 
  
 def get_average_year(year_dict):
+    overall = 0
+    counter = 0
+    for lists in year_dict:
+        for num in year_dict[lists]:
+            counter += 1
+            overall += float(num)
+    if(overall > 0 and counter > 0):
+        return (overall / counter)
+    else:
+        return 0
+
+def get_average_month(year_dict):
     pass
 
-def get_average_month():
-    pass
-
-#process_file()
-test = {1: ['10.123', '30.34', '200.3423', '49.6', '4.92034'], 2: ['1.3', '48.234', '20', '5'], 3: ['12', '49.12342', '100.23']}
-export_year_info(test, 1994)
+process_file()
+test = {1: ['10.123', '30.34', '200.3423', '49.6', '4.92034'], 2: ['1.3', '48.234', '20', '5'], 3: ['12', '49.12342', '1.13']}
+test = {1: ['1', '2', '3', '4'], }
+#export_year_info(test, 1994)

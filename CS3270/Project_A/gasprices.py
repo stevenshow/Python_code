@@ -49,8 +49,8 @@ def print_year_info(year_dict, year):
         min_price = float(get_min(year_dict))
         max_price = float(get_max(year_dict))
         average = get_average_year(year_dict)
-        print(f'\n{year}:')
-        print(f'\tLow: {round(min_price, 2)}, Avg:{round(average, 2)}, High: {round(max_price, 2)}')
+        out.write(f'\n{year}:')
+        out.write(f'\tLow: {round(min_price, 2)}, Avg:{round(average, 2)}, High: {round(max_price, 2)}')
         
 
 def print_month_info(year_dict):

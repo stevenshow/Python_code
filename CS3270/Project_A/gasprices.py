@@ -61,7 +61,8 @@ def print_month_info(year_dict):
         counter == line
         while(line == curr_month):
             average_month = mean(float(n) if n else 0 for n in year_dict[line])
-            print(f'\t{calendar.month_name[curr_month]}\t${round(average_month, 2)}')
+            print('\t{:<10s}${:.2f}'.format(calendar.month_name[curr_month],round(average_month, 2)))
+            #print(f'\t{calendar.month_name[curr_month]}\t${round(average_month, 2)}')
             counter += 1
             curr_month += 1
             break

@@ -45,29 +45,30 @@ def process_file():
             
 
 def print_year_info(year_dict, year):
+    min_price = float(get_min(year_dict))
+    max_price = float(get_max(year_dict))
+    average = get_average_year(year_dict)
     with open('/home/steven/Documents/Python_code/CS3270/Project_A/gas_report.txt', 'a+') as out:
-        min_price = float(get_min(year_dict))
-        max_price = float(get_max(year_dict))
-        average = get_average_year(year_dict)
         out.write(f'\n{year}:')
-        out.write(f'\tLow: {round(min_price, 2)}, Avg:{round(average, 2)}, High: {round(max_price, 2)}')
+        out.write(f'\tLow: ${round(min_price, 2)}, Avg: ${round(average, 2)}, High: ${round(max_price, 2)}\n')
         
 
 def print_month_info(year_dict):
     #calendar.month_name[number of month 1-12]
     counter = 0
     curr_month = 1                              #Need to figure out how to get the dictionary key in the first slot ***
-    for line in year_dict:                      #Need to print the prices of the months gas average in a neat column
-        counter == line
-        while(line == curr_month):
-            average_month = mean(float(n) if n else 0 for n in year_dict[line])
-            print('\t{:<10s}${:.2f}'.format(calendar.month_name[curr_month],round(average_month, 2)))
-            #print(f'\t{calendar.month_name[curr_month]}\t${round(average_month, 2)}')
-            counter += 1
-            curr_month += 1
-            break
-        else:
-            break
+    with open('/home/steven/Documents/Python_code/CS3270/Project_A/gas_report.txt', 'a+') as out: 
+        for line in year_dict:                      #Need to print the prices of the months gas average in a neat column
+            counter == line
+            while(line == curr_month):
+                average_month = mean(float(n) if n else 0 for n in year_dict[line])
+                out.write('\t\t{:<10s}${:.2f}\n'.format(calendar.month_name[curr_month],round(average_month, 2)))
+                #print(f'\t{calendar.month_name[curr_month]}\t${round(average_month, 2)}')
+                counter += 1
+                curr_month += 1
+                break
+            else:
+                break
 
 def get_min(year_dict):
     #min_key = min(year_dict, key=int)

@@ -12,7 +12,7 @@ import os
 def read_file():
     try:
         filename = input('Enter name of text file: ')
-        with open('/home/steven/Documents/python_practice-1/CS3270/' + filename, 'r') as f:
+        with open('/home/steven/Documents/Python_code/CS3270/Exercise_1/' + filename, 'r') as f:
             print(f'\nStatistics for file [{filename}]:')        
             text = f.read()
             text_info(text)

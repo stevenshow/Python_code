@@ -1,5 +1,6 @@
 import re
 '''Reads to file provided and counts all the letters and apostrophes,
+<<<<<<< HEAD
 then outputs to a file the count of each letter (case does not matter)'''
 # [] Read file
 # [] Store file data and process file

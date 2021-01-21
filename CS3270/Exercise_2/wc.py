@@ -1,4 +1,12 @@
+import re
 '''Reads to file provided and counts all the letters and apostrophes,
+<<<<<<< HEAD
+then outputs to a file the count of each letter (case does not matter)'''
+# [] Read file
+# [] Store file data and process file
+# [] Count only words that have letters and apostrophes (everything lowercase)
+# [] Output count and words in a nice column format
+=======
 then outputs to a file the count of each letter (case does not matter)
 Created by Steven Schoebinger 01/18/2021'''
 import re
@@ -6,9 +14,19 @@ import re
 # [X] Store file data and process file
 # [X] Count only words that have letters and apostrophes (everything lowercase)
 # [X] Output count and words in a nice column format
+>>>>>>> 8bf7fd3a4ace790a1e649f08559e8b45a9081259
 def count_words():
+    word_pattern = '[A-Za-z\']+'
+    print(word_pattern)
     with open("/home/steven/Documents/Python_code/CS3270/Exercise_2/Strings.txt") as f: 
         file = f.read()
+<<<<<<< HEAD
+        my_list = re.findall(word_pattern, file)
+        print(my_list)
+        
+
+count_words()
+=======
         word_count = {}
         word_list = (re.findall('([A-Za-z\']+)', file.lower()))
         longest_word = max(map(len, word_list))
@@ -21,3 +39,4 @@ def count_words():
         for item in sorted_word_count:
             print('{0:>{1}}: {2:^5}'.format(item[0], longest_word ,item[1]))
 count_words()
+>>>>>>> 8bf7fd3a4ace790a1e649f08559e8b45a9081259

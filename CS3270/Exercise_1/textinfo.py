@@ -5,7 +5,7 @@ import os
 # [X] Lower case count
 # [X] Digit count
 # [X] White space count
-# [X] Vowels - {'a': 102, 'e': 165, 'i': 68, 'o': 93, 'u': 21} 
+# [X] Vowels - {'a': 102, 'e': 165, 'i': 68, 'o': 93, 'u': 21}
 # [X] Consonants count
 # [X] Average words per sentence count (rounded to nearest 10th)
 
@@ -13,7 +13,8 @@ def read_file():
     try:
         filename = input('Enter name of text file: ')
         with open('/home/steven/Documents/Python_code/CS3270/Exercise_1/' + filename, 'r') as f:
-            print(f'\nStatistics for file [{filename}]:')        
+<<<<<<< HEAD
+            print(f'\nStatistics for file [{filename}]:')
             text = f.read()
             text_info(text)
     except IOError:
@@ -24,27 +25,27 @@ def read_file():
 def text_info(text):
     vowel_chars = 'aeiou'
     words = text.split()
-    character_count = sum(1 for letter in text)    
+    character_count = sum(1 for letter in text)
     upper_count = sum(map(str.isupper, text))
     lower_count = sum(map(str.islower, text))
     white_space = sum(map(str.isspace, text))
     vowels = {'a': 0, 'e': 0, 'i': 0, 'o': 0, 'u': 0}
     consonants = 0
     digits = 0
-    
+
     #Counts number of Vowels, Consonants, and Digits
     for letter in text:
         if letter.isalpha() and letter in vowel_chars:
             #this statement is if the vowel dictionary is not already populated with vowels
             if letter not in vowels:
                 vowels[letter.lower()] = 1
-            else: 
-                vowels[letter.lower()] += 1 
+            else:
+                vowels[letter.lower()] += 1
         elif letter.isalpha() and letter not in vowel_chars:
             consonants += 1
         elif letter.isdigit():
             digits += 1
-    
+
     counter_dict = {}
     counter = 0
     sen_count = -1
@@ -53,19 +54,19 @@ def text_info(text):
         if word.endswith('.') == False:
             counter +=1
         else:
-            counter +=1 
+            counter +=1
             sen_count += 1
             counter_dict[sen_count] = counter
             counter = 0
-    
+
     if len(counter_dict) > 0:
         sentences = len(counter_dict)
         avg_wps = (sum(counter_dict.values())/ sentences)
         avg_wps = round(avg_wps, 1)
     else:
         sentences = 0
-        avg_wps = 0    
-    
+        avg_wps = 0
+
     info = {'characters': character_count, 'upper': upper_count, 'lower': lower_count, 'digits': digits,
     'whitespace': white_space, 'vowels': vowels, 'consonants': consonants, 'sentences': sentences, 'avg_wps': avg_wps}
     print_text_info(info)

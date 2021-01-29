@@ -6,7 +6,7 @@ import parts2
 # [X] Get names of all suppliers that supply bolts.
 # [X] Get names of all suppliers that supply blueparts.
 # [X] Get names of all suppliers not used in Athens projects
-# [] Get names and colors of all parts not used in Oslo
+# [X] Get names and colors of all parts not used in Oslo
 # [] Get pairs of names of all suppliers that are located in the same city.
 # [] Print allsuppliers out by city
 
@@ -29,8 +29,14 @@ def not_Athens():
     print(noAthens_supplier)
 
 def not_Oslo():
-    pass:
+    oslo_jno = [j.jno for j in parts2.projects if j.city == 'Oslo']
+    oslo_pno = [p.pno for p in parts2.spj if p.jno in oslo_jno]
+    not_oslo_parts = [p.pno for p in parts2.spj if p.pno not in oslo_pno]
+    parts_dict = [(p.pname, p.color) for p in parts2.parts if p.pno in not_oslo_parts]
+    print(parts_dict)
+
 
 #bolt_suppliers()
 #blue_part_suppliers()
 #not_Athens()
+#not_Oslo()

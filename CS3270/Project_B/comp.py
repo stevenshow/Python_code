@@ -8,7 +8,7 @@ import parts
 # [X] Get names of all suppliers not used in Athens projects
 # [X] Get names and colors of all parts not used in Oslo
 # [X] Get pairs of names of all suppliers that are located in the same city.
-# [] Print all suppliers out by city
+# [X] Print all suppliers out by city
 
 def bolt_suppliers():
     '''Populates a set with the names of the suppliers that supply

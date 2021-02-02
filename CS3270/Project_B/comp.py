@@ -1,7 +1,6 @@
 '''Finds specific suppliers who supply specific parts
 or operate in different cities by using dict comprehension
 Created by: Steven Schoebinger 1/28/2021'''
-import parts
 from collections import namedtuple
 # pylint: disable=invalid-name, undefined-loop-variable
 # [X] Get names of all suppliers that supply bolts.
@@ -17,16 +16,18 @@ projects = set()
 spj = set()
 
 def read_files():
+    '''Reads all the data from the files provided and places them
+    in named tuples'''
     Supplier = namedtuple('Supplier',['sno', 'sname', 'status', 'city'])
     Part = namedtuple('Part',['pno', 'pname', 'color', 'weight', 'city'])
     Project = namedtuple('Project',['jno', 'jname', 'city'])
     SPJ = namedtuple('SPJ',['sno', 'pno', 'jno', 'qty'])
-    
+
     with open('/home/steven/Documents/Python_code/CS3270/Project_B/suppliers.txt', 'r') as f:
         temp= f.read().splitlines() #take out newline char
         for line in temp:
             line = line.split(',')
-            suppliers.add(Supplier(line[0], line[1], line[2], line[3]))    
+            suppliers.add(Supplier(line[0], line[1], line[2], line[3]))
     with open('/home/steven/Documents/Python_code/CS3270/Project_B/parts.txt', 'r') as f:
         temp= f.read().splitlines() #take out newline char
         for line in temp:

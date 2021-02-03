@@ -14,37 +14,26 @@ suppliers = set()
 parts = set()
 projects = set()
 spj = set()
+path = '/home/steven/Documents/Python_code/CS3270/Project_B/'
+Supplier = namedtuple('Supplier',['sno', 'sname', 'status', 'city'])
+Part = namedtuple('Part',['pno', 'pname', 'color', 'weight', 'city'])
+Project = namedtuple('Project',['jno', 'jname', 'city'])
+SPJ = namedtuple('SPJ',['sno', 'pno', 'jno', 'qty'])
 
-def read_files():
-    '''Reads all the data from the files provided and places them
+def read_files(file_name, tuple_name, set_name):
+    '''readfiles(string, namedtuple, set) Reads all the data from the files provided and places them
     in named tuples'''
-    Supplier = namedtuple('Supplier',['sno', 'sname', 'status', 'city'])
-    Part = namedtuple('Part',['pno', 'pname', 'color', 'weight', 'city'])
-    Project = namedtuple('Project',['jno', 'jname', 'city'])
-    SPJ = namedtuple('SPJ',['sno', 'pno', 'jno', 'qty'])
+    with open(path + file_name + '.txt', 'r') as f:
+        temp= f.read().splitlines() #take out newline char
+        for line in temp:
+            line = line.split(',')
+            line = tuple(line)
+            set_name.add(tuple_name(*line))
 
-    with open('/home/steven/Documents/Python_code/CS3270/Project_B/suppliers.txt', 'r') as f:
-        temp= f.read().splitlines() #take out newline char
-        for line in temp:
-            line = line.split(',')
-            suppliers.add(Supplier(line[0], line[1], line[2], line[3]))
-    with open('/home/steven/Documents/Python_code/CS3270/Project_B/parts.txt', 'r') as f:
-        temp= f.read().splitlines() #take out newline char
-        for line in temp:
-            line = line.split(',')
-            parts.add(Part(line[0], line[1], line[2], line[3], line[4]))
-    with open('/home/steven/Documents/Python_code/CS3270/Project_B/projects.txt', 'r') as f:
-        temp= f.read().splitlines() #take out newline char
-        for line in temp:
-            line = line.split(',')
-            projects.add(Project(line[0], line[1], line[2]))
-    with open('/home/steven/Documents/Python_code/CS3270/Project_B/spj.txt', 'r') as f:
-        temp= f.read().splitlines() #take out newline char
-        for line in temp:
-            line = line.split(',')
-            spj.add(SPJ(line[0], line[1], line[2], line[3]))
-
-read_files()
+read_files('suppliers', Supplier, suppliers)
+read_files('parts', Part, parts)
+read_files('projects', Project, projects)
+read_files('spj', SPJ, spj)
 
 def bolt_suppliers():
     '''Populates a set with the names of the suppliers that supply

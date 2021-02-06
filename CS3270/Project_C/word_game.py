@@ -15,9 +15,17 @@ low = int(low_high[0])
 high = int(low_high[1:])
 
 def get_user():
-    pass
+    print(word)
+    print(shuffled_word)
 
-def choose_word(high, word_dict):
+def shuffle():
+    '''Shuffles the word each time that the user guesses a word'''
+    word_list = list(word)
+    random.shuffle(word_list)
+    shuffled_word = ''.join(word_list)
+    return(shuffled_word)
+
+def choose_word():
     '''Takes the high input and also gets a random letter to use as a tuple to search
     in the dictionary tuple keys'''
     letter = random.randint(97, 122)
@@ -43,30 +51,37 @@ def dict_tuple():
                 word_dict[(word[0].lower(), len(word))] = [word.lower()]
         return(word_dict)
 
-def process_dict(low, high, chosen_word, word_dict):
-    word = chosen_word
-    guess_list = set()
+def process_dict(guess_list):
+    '''Scrambles chosen word and creates subset of all words of length
+    low->high-1'''
+    word_lengths = set()
     for i in range(low, high):
         #words are not fully scrambling for every combination
         letter_tuples = list(combinations(word, i))
         my_words = [''.join(tups) for tups in letter_tuples]
-        get_extra_words(my_words, guess_list)
-    print(guess_list)
+        get_extra_words(my_words, guess_list, word_lengths)
+    return(word_lengths)
 
-
-def get_extra_words(my_words, guess_list):
+def get_extra_words(my_words, guess_list, word_lengths):
+    '''Helper function for process_dict() to place words into list'''
     for word in my_words:
         if (word[0], len(word)) in word_dict:
             if word in word_dict[(word[0], len(word))]:   
-                guess_list.add(word)                
-
+                guess_list.add(word)
+                word_lengths.add(len(word))                
 
 
 word_dict = dict_tuple()
-choose_word(high, word_dict)
-word = choose_word(high, word_dict)
-process_dict(low, high, word, word_dict)
+word = choose_word()
+my_words = set()
+shuffled_word = shuffle()
+word_lengths = process_dict(my_words)
+print(my_words)
+
+print(word_lengths)
+
 get_user()
+choose_word()
 
 def dict_creator():
     path = '/home/steven/Documents/Python_code/CS3270/Project_C/'

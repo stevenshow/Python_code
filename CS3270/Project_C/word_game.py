@@ -16,29 +16,36 @@ low = int(low_high[0])
 high = int(low_high[1:])
 
 def get_user():
-    print(sorted_words)
+    #print(sorted_words)
     total = (sum([len(dotted_words[x]) for x in dotted_words if isinstance(dotted_words[x], list)]))
     correct = 0
     while(True):
-        if(shuffled_word == word):
-            shuffle()
+        last_shuffle = shuffle()
+        if(shuffle() != last_shuffle):
+            print('\n' + 
+            shuffle() + ':\n')
         else:
-            print(shuffled_word + ':\n')
+            break
         for i in dotted_words:
             print(dotted_words[i])
         guess = input('\nEnter a guess: ')
         if(guess == 'q'):
+            print('\n')
             for i in sorted_words:
                 print(sorted_words[i])
             quit()
-        if guess in sorted_words[len(guess)]:
-            print('Correct!')
-            correct += 1
-            index = sorted_words[len(guess)].index(guess)
-            dotted_words[len(guess)][index] = guess
+        if len(guess) in sorted_words:
+            if guess in sorted_words[len(guess)]:
+                print('Correct!')
+                correct += 1
+                index = sorted_words[len(guess)].index(guess)
+                dotted_words[len(guess)][index] = guess
+            else:
+                print('Try again!')
         else:
-            print('Try again!')
+            print('Try again')
         if(correct == total):
+            print('\n')
             for i in dotted_words:
                 print(dotted_words[i])
             quit()
@@ -113,38 +120,31 @@ def dotted_list(my_words, word_lengths):
 word_dict = dict_tuple()
 word = choose_word()
 my_words = set()
-shuffled_word = shuffle()
 word_lengths, my_words = process_dict(my_words)
 sorted_words, dotted_words = dotted_list(my_words, word_lengths)
-#print(sorted_words)
-#print(dotted_words)
-#print(my_words)
-#print(word_lengths)
-
 get_user()
 choose_word()
-#dotted_list()
 
-def dict_creator():
-    path = '/home/steven/Documents/Python_code/CS3270/Project_C/'
-    with open(path + 'words.txt', 'r') as f:
-        my_dict = {}
-        file = f.read()
-        words = nltk.word_tokenize(file)
-        #print(words)
-        for word in words:
-            if word[0].lower() in my_dict:    
-                my_dict[word[0].lower()].append(word.lower())
-            else:
-                my_dict[word[0].lower()] = [word.lower()]    
-        print(my_dict)
-
-    word = 'burner'
-    letter_tuples = list(combinations(word, 3))
-    my_words = [''.join(tups) for tups in letter_tuples]
-    print(my_words)
-    for word in my_words:
-        if word[0] in my_dict:
-            if word in my_dict[word[0]]:
-                print(word)
-    #print(my_words)
+#def dict_creator():
+#    path = '/home/steven/Documents/Python_code/CS3270/Project_C/'
+#    with open(path + 'words.txt', 'r') as f:
+#        my_dict = {}
+#        file = f.read()
+#        words = nltk.word_tokenize(file)
+#        #print(words)
+#        for word in words:
+#            if word[0].lower() in my_dict:    
+#                my_dict[word[0].lower()].append(word.lower())
+#            else:
+#                my_dict[word[0].lower()] = [word.lower()]    
+#        print(my_dict)
+#
+#    word = 'burner'
+#    letter_tuples = list(combinations(word, 3))
+#    my_words = [''.join(tups) for tups in letter_tuples]
+#    print(my_words)
+#    for word in my_words:
+#        if word[0] in my_dict:
+#            if word in my_dict[word[0]]:
+#                print(word)
+#    print(my_words)

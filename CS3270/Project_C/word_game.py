@@ -60,11 +60,20 @@ def shuffle():
 def choose_word():
     '''Takes the high input and also gets a random letter to use as a tuple to search
     in the dictionary tuple keys'''
+    word = ''
     letter = random.randint(97, 122)
-    if word_dict[(chr(letter), high)]:
-        word = word_dict[(chr(letter), high)][0]
-    else:
-        letter = random.randint(97, 122)
+    word_list = []
+    dict_keys = list(word_dict.keys())
+    for x in dict_keys:
+        if x[1] == high:
+            word_list.append(x)
+    print(word_list)
+    choice = random.choice(word_list)
+    word = random.choice(word_dict[choice])
+    #if (chr(letter), high) in word_dict.keys():
+    #    word = word_dict[(chr(letter), high)][0]
+    #else:
+    #    letter = random.randint(97, 122)
     return word
 
 def dict_tuple():

@@ -3,7 +3,8 @@ based on user input.  The user is then prompted to enter guesses and if the user
 is correct the dashed word will be replaced with the users correct guess
 if the user is wrong, the program will shuffle the word and let the user
 guess again.  If the user is done guessing and wants to exit, they can enter
-'q' and all the words will be revealed and the program will exit'''
+'q' and all the words will be revealed and the program will exit
+Created by: Steven Schoebinger 2/01/2021'''
 from itertools import combinations
 import random
 import re

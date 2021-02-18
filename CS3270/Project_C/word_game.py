@@ -11,6 +11,7 @@ import re
 import copy
 import sys
 import nltk
+import os
 # pylint: disable=invalid-name, undefined-loop-variable
 # [X] Parse text file and create list of words
 # [X] Create dictionary with length and starting letter as key
@@ -84,8 +85,9 @@ def dict_tuple():
     '''Creates a dictionary with (starting letter of word, length of word) as the key and
     the value as a list of words fitting that criteria.
     EX. {('a', 3): ['abs', 'art']'''
-    path = '/home/steven/Documents/Python_code/CS3270/Project_C/'
-    with open(path + 'words.txt', 'r') as f:
+    path = os.path.dirname(__file__)
+    #path = '/home/steven/Documents/Python_code/CS3270/Project_C/'
+    with open(path + '/words.txt', 'r') as f:
         word_tup = {}
         file = f.read()
         words = nltk.word_tokenize(file)

@@ -2,6 +2,7 @@
 or operate in different cities by using dict comprehension
 Created by: Steven Schoebinger 1/28/2021'''
 from collections import namedtuple
+import os
 # pylint: disable=invalid-name, undefined-loop-variable
 # [X] Get names of all suppliers that supply bolts.
 # [X] Get names of all suppliers that supply blueparts.
@@ -14,7 +15,8 @@ suppliers = set()
 parts = set()
 projects = set()
 spj = set()
-path = '/home/steven/Documents/Python_code/CS3270/Project_B/'
+path = os.path.dirname(__file__)
+#path = '/home/steven/Documents/Python_code/CS3270/Project_B/'
 Supplier = namedtuple('Supplier',['sno', 'sname', 'status', 'city'])
 Part = namedtuple('Part',['pno', 'pname', 'color', 'weight', 'city'])
 Project = namedtuple('Project',['jno', 'jname', 'city'])
@@ -23,17 +25,17 @@ SPJ = namedtuple('SPJ',['sno', 'pno', 'jno', 'qty'])
 def read_files(file_name, tuple_name, set_name):
     '''readfiles(string, namedtuple, set) Reads all the data from the files provided and places them
     in named tuples'''
-    with open(path + file_name + '.txt', 'r') as f:
+    with open(path + file_name, 'r') as f:
         temp= f.read().splitlines() #take out newline char
         for line in temp:
             line = line.split(',')
             line = tuple(line)
             set_name.add(tuple_name(*line))
 
-read_files('suppliers', Supplier, suppliers)
-read_files('parts', Part, parts)
-read_files('projects', Project, projects)
-read_files('spj', SPJ, spj)
+read_files('/suppliers.txt', Supplier, suppliers)
+read_files('/parts.txt', Part, parts)
+read_files('/projects.txt', Project, projects)
+read_files('/spj.txt', SPJ, spj)
 
 def bolt_suppliers():
     '''Populates a set with the names of the suppliers that supply

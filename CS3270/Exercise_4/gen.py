@@ -33,4 +33,8 @@ def consume1(my_iter):
                 stream.append(char)
     print(''.join(stream))
 
+p = produce('A2B5E3426FG0ZYW3210PQ89R')
+for s in p:
+    print(s,end=' ')
+print()
 consume1(produce(the_string))

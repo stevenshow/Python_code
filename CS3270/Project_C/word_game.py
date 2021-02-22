@@ -5,7 +5,7 @@ if the user is wrong, the program will shuffle the word and let the user
 guess again.  If the user is done guessing and wants to exit, they can enter
 'q' and all the words will be revealed and the program will exit
 Created by: Steven Schoebinger 2/01/2021'''
-from itertools import combinations
+from itertools import combinations, permutations
 import random
 import re
 import copy
@@ -90,7 +90,8 @@ def dict_tuple():
     with open(path + '/words.txt', 'r') as f:
         word_tup = {}
         file = f.read()
-        words = nltk.word_tokenize(file)
+        #words = nltk.word_tokenize(file)
+        words = file.split()
         for ele in words:
             if (ele[0].lower(), len(ele)) in word_tup:
                 word_tup[(ele[0].lower(), len(ele))].append(ele.lower())
@@ -104,7 +105,8 @@ def process_dict(guess_list):
     lengths = set()
     guess_list = set()
     for i in range(low, high+1):
-        letter_tuples = list(combinations(word, i))
+        #letter_tuples = list(combinations(word, i))
+        letter_tuples = list(permutations(word, i))
         words = [''.join(tups) for tups in letter_tuples]
         process_dict_helper(words, guess_list, lengths)
     return lengths, guess_list

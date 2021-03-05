@@ -1,12 +1,39 @@
 from payroll import *
+import os
 import shutil
-def main():
-load_employees()
-process_timecards()
-process_receipts()
-run_payroll()
+employees = []
+PAY_LOGFILE = 'paylog.txt'
 
-# Save copy of payroll file; delete old file
+def load_employees():
+    with open('employees.csv', 'r') as f:
+        data = [i for i in f.readlines()]
+        for i in data[:-1]:
+            emp = Employee(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7])
+            print(emp)
+
+def process_timecards():
+    pass
+def process_receipts():
+    pass
+
+def run_payroll():
+    if os.path.exists(PAY_LOGFILE): # pay_log_file is a global variable holding ‘payroll.txt’
+        os.remove(PAY_LOGFILE)
+    for emp in employees:
+        emp.issue_payment()
+
+def find_employee_by_id(id):
+    for employee in employees:
+        if employee.id == id:
+            return employee
+
+def main():
+    load_employees()
+    process_timecards()
+    process_receipts()
+    run_payroll()
+
+#Save copy of payroll file; delete old file
 shutil.copyfile(PAY_LOGFILE, 'paylog_old.txt')
 if os.path.exists(PAY_LOGFILE):
     os.remove(PAY_LOGFILE)

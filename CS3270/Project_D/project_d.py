@@ -12,7 +12,12 @@ def find_employee_by_id(id):
     pass
 
 def load_employees():
-    pass
+    #list contains just ID's.  Then the employee should be created according to classification and paymethod
+    with open('employees.csv', 'r') as f:
+        f.readline()
+        while f.readlines():
+            print(f.readlines())
+    print(employees)
 
 def process_timecards():
     pass

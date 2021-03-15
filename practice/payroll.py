@@ -36,7 +36,7 @@ class Salaried(classification):
         self.salary = salary
         super().__init__(id, name, address, city, state, zipcode, classification, paymethod)
     def compute_pay(self):
-        pass
+        return self.salary / 24
 
 class Hourly(classification):
     def __init__(self, id, name, address, city, state, zipcode, classification, paymethod, hourly_rate):
@@ -45,7 +45,7 @@ class Hourly(classification):
     timecards = []
 
     def compute_pay(self):
-        pass
+        return self.hourly_rate * hours
 
     def add_timecards(self, hours):
         pass

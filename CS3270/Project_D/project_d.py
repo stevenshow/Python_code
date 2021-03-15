@@ -4,6 +4,27 @@
 
 from payroll import *
 import shutil
+import os
+PAY_LOGFILE = 'paylog.txt'
+employees = []
+
+def find_employee_by_id(id):
+    pass
+
+def load_employees():
+    pass
+
+def process_timecards():
+    pass
+
+def process_receipts():
+    pass
+
+def run_payroll():
+    if os.path.exists(PAY_LOGFILE):
+        os.remove(PAY_LOGFILE)
+    for emp in employees:
+        emp.issue_payment()
 
 def main():
     load_employees()

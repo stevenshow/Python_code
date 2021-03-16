@@ -1,6 +1,6 @@
 import os
 import shutil
-from abc import ABCMeta
+from abc import ABC
 from collections import namedtuple
 from csv import reader
 
@@ -42,7 +42,7 @@ class Employee:
         self.paymethod.issue(pay)
 
 
-class classification(metaclass=ABCMeta):
+class classification(ABC):
     def compute_pay(self):
         pass
 
@@ -90,7 +90,7 @@ class Commissioned(Salaried):
         return pay
 
 
-class PayMethod(metaclass=ABCMeta):
+class PayMethod(ABC):
     def __init__(self, emp):
         self.emp = emp
 

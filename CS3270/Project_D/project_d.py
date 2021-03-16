@@ -8,11 +8,7 @@ from collections import namedtuple
 from csv import reader
 path = os.path.dirname(__file__)
 PAY_LOGFILE = 'paylog.txt'
-employees = []
-
-def find_employee_by_id(id):
-    #loop through employee list.  Check employee.id and return Employee object
-    pass
+employees = {}
 
 def load_employees():
     #list contains Employee objects
@@ -55,12 +51,25 @@ def load_employees():
                     mail = MailMethod(employees[emp.ID])
                     employees[emp.ID].PayMethod = mail
 
+def find_employee_by_id(id):
+    #loop through employee list.  Check employee.id and return Employee object
+    if id in employees:
+        return employees[id]
+    return -1
+
 def process_timecards():
-    pass
-
+    with open(path + '/timecards.txt', 'r') as f:
+        csv_reader = reader(f)
+        for hour_list in csv_reader:
+            id = hour_list.pop(0)
+            employees[id].classification.timecards = hour_list
+            
 def process_receipts():
-    pass
-
+    with open(path + '/receipts.txt', 'r') as f:
+        csv_reader = reader(f)
+        for receipt_list in csv_reader:
+            id = receipt_list.pop(0)
+            employees[id].classification.receipts = receipt_list
 def run_payroll():
     if os.path.exists(PAY_LOGFILE):
         os.remove(PAY_LOGFILE)

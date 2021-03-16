@@ -11,19 +11,23 @@ class Employee:
         self.paymethod = paymethod
 
     def make_hourly(self, hourly_rate):
-        pass
+        self.classification = Hourly(hourly_rate)
+    
     def make_salary(self, salary):
-        pass
+        self.classification = Salaried(salary)
+    
     def make_commissioned(self, salary, rate):
-        pass
+        self.classification = Commissioned(salary, rate)
+    
     def mail_method(self):
-        pass
+        self.paymethod = MailMethod(self)
+    
     def direct_method(self, route, account):
-        pass
+        self.paymethod = DirectMethod(self, route, account)
+    
     def issue_payment(self):
         pass
 
-#Is this necessary?  
 class classification(metaclass=ABCMeta):
     def compute_pay(self):
         pass
@@ -31,6 +35,7 @@ class classification(metaclass=ABCMeta):
 class Salaried(classification):
     def __init__(self, salary):
         self.salary = salary
+    
     def compute_pay(self):
         pass
 
@@ -43,7 +48,7 @@ class Hourly(classification):
         pass
 
     def add_timecards(self, hours):
-        pass
+        self.timecards.append(hours)
 
 class Commissioned(Salaried):
     def __init__(self, salary, commission_rate):
@@ -52,7 +57,7 @@ class Commissioned(Salaried):
         self.commission_rate = commission_rate
 
     def add_receipt(self, amount):
-        pass
+        self.receipts.append(amount)
 
     def compute_pay(self):
         pass
@@ -62,6 +67,7 @@ class Commissioned(Salaried):
 class PayMethod(metaclass=ABCMeta):
     def __init__(self, emp):
         self.emp = emp
+    
     def issue(self, pay):
         pass
 

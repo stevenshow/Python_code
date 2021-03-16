@@ -1,4 +1,12 @@
 from abc import ABCMeta
+#What is left?
+# [] issue_payment for Employee
+# [] compute_pay for Hourly
+# [] compute_pay for Salaried 
+# [] compute_pay for Commissioned
+# [] issue for DirectMethod
+# [] issue for MailMethod
+
 class Employee:
     def __init__(self, id, name, address, city, state, zipcode, classification, paymethod):
         self.id = id 

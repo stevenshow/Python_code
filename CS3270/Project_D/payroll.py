@@ -1,3 +1,4 @@
+from abc import ABCMeta
 class Employee:
     def __init__(self, id, name, address, city, state, zipcode, classification, paymethod):
         self.id = id 
@@ -23,26 +24,20 @@ class Employee:
         pass
 
 #Is this necessary?  
-class classification(Employee):
-    def __init__(self, id, name, address, city, state, zipcode, classification, paymethod):
-        self.classification = classification   
-        super.__init__(self, id, name, address, city, state, zipcode, classification, paymethod)
-    
+class classification(metaclass=ABCMeta):
     def compute_pay(self):
         pass
 
 class Salaried(classification):
-    def __init__(self, id, name, address, city, state, zipcode, classification, paymethod):
-        super().__init__(id, name, address, city, state, zipcode, classification, paymethod)
-    
+    def __init__(self, salary):
+        self.salary = salary
     def compute_pay(self):
         pass
 
 class Hourly(classification):
-    def __init__(self, id, name, address, city, state, zipcode, classification, paymethod):
-        super().__init__(id, name, address, city, state, zipcode, classification, paymethod)
-    hourly_rate = 0
-    timecards = []
+    def __init__(self, hourly_rate):
+        self.hourly_rate = hourly_rate
+        self.timecards = []
 
     def compute_pay(self):
         pass
@@ -51,10 +46,11 @@ class Hourly(classification):
         pass
 
 class Commissioned(Salaried):
-    def __init__(self, id, name, address, city, state, zipcode, classification, paymethod):
-        super().__init__(id, name, address, city, state, zipcode, classification, paymethod)
-    receipts = []
-    
+    def __init__(self, salary, commission_rate):
+        self.salary = salary
+        self.receipts = []
+        self.commission_rate = commission_rate
+
     def add_receipt(self, amount):
         pass
 
@@ -63,23 +59,24 @@ class Commissioned(Salaried):
 
 
 
-
-
-
-
-class PayMethod():
-    Employee
-
+class PayMethod(metaclass=ABCMeta):
+    def __init__(self, emp):
+        self.emp = emp
     def issue(self, pay):
         pass
 
 class DirectMethod(PayMethod):
-    route = ""
-    account = ""
+    def __init__(self, emp, route, account):
+        super().__init__(emp)
+        self.route = route
+        self.account = account
 
     def issue(self, pay):
         pass
 
 class MailMethod(PayMethod):
+    def __init__(self, emp):
+        super().__init__(emp)
+    
     def issue(self, pay):
         pass

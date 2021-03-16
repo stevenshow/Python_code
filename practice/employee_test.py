@@ -17,7 +17,8 @@ def load_employees():
         #._make() is used to return a namedtuple() from the iterable passed as argument
         for emp in map(emps._make, csv_reader):
             if emp.Classification == '1':
-                employees[emp.ID] = Hourly(emp.ID, emp.Name, emp.Address, emp.City, emp.State, emp.Zip, emp.Classification, emp.PayMethod, emp.Hourly)
+                employees[emp.ID] = Employee(emp.ID, emp.Name, emp.Address, emp.City, emp.State, emp.Zip, emp.Classification, emp.PayMethod)
+                Hourly()
         #print(employees['688997'].name) How to access employee data from dictionary
                     
         

@@ -1,23 +1,36 @@
 '''
     project_d.py: Illustrates the payroll module.
 '''
-
 from payroll import *
 import shutil
 import os
+from collections import namedtuple
+from csv import reader
+path = os.path.dirname(__file__)
 PAY_LOGFILE = 'paylog.txt'
 employees = []
 
 def find_employee_by_id(id):
+    #loop through employee list.  Check employee.id and return Employee object
     pass
 
 def load_employees():
-    #list contains just ID's.  Then the employee should be created according to classification and paymethod
-    with open('employees.csv', 'r') as f:
-        f.readline()
-        while f.readlines():
-            print(f.readlines())
-    print(employees)
+    #list contains Employee objects
+    #Hourly = 1
+    #Salary = 2
+    #Commissioned = 3
+    with open(path + '/employees.csv', 'r') as f:
+        #Get first line of csv and use it to set up named tuple
+        csv_reader = reader(f)
+        emps = namedtuple("Employee", next(csv_reader))
+        #._make() is used to return a namedtuple() from the iterable passed as argument
+        for emp in map(emps._make, csv_reader):
+            if emp.Classification == '1':
+                hourly = Hourly(emp.Hourly)
+                #pass classification object and payment object as employee variabls
+                employees[emp.ID] = Employee(emp.ID, emp.Name, emp.Address, emp.City, emp.State, emp.Zip, hourly, emp.PayMethod)
+
+        #print(employees['688997'].name) How to access employee data from dictionary
 
 def process_timecards():
     pass

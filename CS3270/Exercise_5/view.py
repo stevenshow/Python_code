@@ -61,6 +61,8 @@ def view(args):
             start += 20
             stop += 20
         current_page = 1
+
+        # Start loop to get and process input
         while command != 'q':
             command = input('Command [u,d,t,b,#,q]: ')
             # Moves one page down; if at botton wrap to the top
@@ -73,6 +75,7 @@ def view(args):
                     print('\n')
                     current_page += 1
                 # If the current page is the last page
+                #current_page should exit on 0
                 else:
                     current_page = 0
                     print(f'[Page {current_page + 1}]:')
@@ -83,7 +86,7 @@ def view(args):
                     current_page = 0
             # Moves view up 1 page; If at the top, wrap to the bottom
             if command == 'u':
-                if current_page != 1:
+                if current_page != 0 and current_page != 1:
                     current_page -= 1
                     print(f'[Page {current_page}]:')
                     for x in range(len(pages[current_page-1])):
@@ -91,6 +94,7 @@ def view(args):
                         print(f.readline(), end='')
                     print('\n')
                 # If the current page is the first page
+                # current_page should exit on 100
                 else:
                     current_page = len(pages) - 1
                     print(f'[Page {current_page + 1}]:')
@@ -118,6 +122,7 @@ def view(args):
                 print('\n')
                 current_page = len(pages)
 
+            # Move to the specified page number
             if command.isdigit() and int(command) <= len(pages) and int(command) > 0:
                 current_page = int(command) - 1
                 print(f'[Page {current_page + 1}]:')
@@ -129,6 +134,7 @@ def view(args):
 
 # Issues:
 # Goine down on page 1 and then up on page 100 causes the page to be -1
+
 
 if __name__ == '__main__':
     view(sys.argv)

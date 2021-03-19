@@ -34,64 +34,101 @@ def view(args):
         offsets = [0]
         command = ''
         pages = []
-        
+
         while f.readline():
             offsets.append(f.tell())
         offsets.pop()  # Remove EOF file POS
         f.seek(offsets.pop())
         print(f.readline(), end='')
-        
+
         # Add newlines until the offsets mod viewsize = 0 so the views are all equal
-        while len(offsets) % 20 != 0:
-            offsets.append('\n')
-            f.write('\n')
-        
+        # while len(offsets) % 20 != 0:
+        #     offsets.append('\n')
+        #     f.write('\n')
+
         # Print initial view
+        print(f'[Page {current_page + 1}]:')
         for x in range(0, 20):
             f.seek(offsets[x])
             print(f.readline(), end='')
         print('\n')
-        
+
         # Gets list of pages with their respectice indicies
         start = 0
         stop = 20
-        for x in range(int(len(offsets)/20)):    
+        for x in range(int(len(offsets)/20)):
             pages.append(offsets[start:stop])
             start += 20
             stop += 20
-
+        current_page = 1
         while command != 'q':
             command = input('Command [u,d,t,b,#,q]: ')
-            # Moves one page down; if at botton wrap to top
+            # Moves one page down; if at botton wrap to the top
             if command == 'd':
-                if current_page != len(pages) - 1:
+                if current_page < len(pages) - 1:
+                    print(f'[Page {current_page + 1}]:')
                     for x in range(len(pages[current_page+1])):
                         f.seek(pages[current_page+1][x])
                         print(f.readline(), end='')
+                    print('\n')
                     current_page += 1
+                # If the current page is the last page
                 else:
-                    for x in range(len(pages[0])):
-                        f.seek(pages[0][x])
-                        print(f.readline(), end='')
                     current_page = 0
-
+                    print(f'[Page {current_page + 1}]:')
+                    for x in range(len(pages[current_page])):
+                        f.seek(pages[current_page][x])
+                        print(f.readline(), end='')
+                    print('\n')
+                    current_page = 0
+            # Moves view up 1 page; If at the top, wrap to the bottom
             if command == 'u':
-                if current_page != 0:
+                if current_page != 1:
+                    current_page -= 1
+                    print(f'[Page {current_page}]:')
                     for x in range(len(pages[current_page-1])):
                         f.seek(pages[current_page-1][x])
                         print(f.readline(), end='')
-                    current_page -= 1
+                    print('\n')
+                # If the current page is the first page
                 else:
+                    current_page = len(pages) - 1
+                    print(f'[Page {current_page + 1}]:')
                     for x in range(len(pages[-1])):
                         f.seek(pages[-1][x])
                         print(f.readline(), end='')
-                    current_page = len(pages) - 1
-                
+                    print('\n')
+                    current_page = len(pages)
+            # Moves to the top page
             if command == 't':
+                current_page = 0
+                print(f'[Page {current_page + 1}]:')
+                for x in range(len(pages[0])):
+                    f.seek(pages[0][x])
+                    print(f.readline(), end='')
+                print('\n')
 
-            # Gets last index location for use with user input
+            # Moved to the bottom page
+            if command == 'b':
+                current_page = len(pages) - 1
+                print(f'[Page {current_page + 1}]:')
+                for x in range(len(pages[-1])):
+                    f.seek(pages[-1][x])
+                    print(f.readline(), end='')
+                print('\n')
+                current_page = len(pages)
 
-        #x = input("Please enter something: ")
-        # print(x)
+            if command.isdigit() and int(command) <= len(pages) and int(command) > 0:
+                current_page = int(command) - 1
+                print(f'[Page {current_page + 1}]:')
+                for x in range(len(pages[current_page])):
+                    f.seek(pages[current_page][x])
+                    print(f.readline(), end='')
+                print('\n')
+                current_page = int(command)
+
+# Issues:
+# Goine down on page 1 and then up on page 100 causes the page to be -1
+
 if __name__ == '__main__':
     view(sys.argv)

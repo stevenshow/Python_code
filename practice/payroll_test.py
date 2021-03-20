@@ -120,6 +120,7 @@ class MailMethod(PayMethod):
                     ' ' + self.emp.city + ' ' + self.emp.state + ' ' + self.emp.zipcode + '\n')
 
 
+
 def load_employees():
     # list contains Employee objects
     # Hourly = 1
@@ -170,7 +171,7 @@ def load_employees():
 
 
 def find_employee_by_id(id):
-    # loop through employee dictionary.  Check employee ID and return Employee object
+    # loop through employee list.  Check employee.id and return Employee object
     if id in employees:
         return employees[id]
     return -1
@@ -197,45 +198,3 @@ def run_payroll():
         os.remove(path + PAY_LOGFILE)
     for emp in employees:
         employees[emp].issue_payment()
-
-
-def main():
-    load_employees()
-    process_timecards()
-    process_receipts()
-    run_payroll()
-
-    # Save copy of payroll file; delete old file
-    shutil.copyfile(path + PAY_LOGFILE, 'paylog_old.txt')
-    if os.path.exists(path + PAY_LOGFILE):
-        os.remove(path + PAY_LOGFILE)
-
-    # Change Karina Gay to Salaried and MailMethod by changing her Employee object:
-    emp = find_employee_by_id('688997')
-    emp.make_salaried(45884.99)
-    emp.mail_method()
-    emp.issue_payment()
-
-    # Change TaShya Snow to Commissioned and DirectMethod; add some receipts
-    emp = find_employee_by_id('522759')
-    emp.make_commissioned(50005.50, 25)
-    emp.direct_method('30417353-K', '465794-3611')
-    clas = emp.classification
-    clas.add_receipt(1109.73)
-    clas.add_receipt(746.10)
-    emp.issue_payment()
-
-    # Change Rooney Alvarado to Hourly; add some hour entries
-    emp = find_employee_by_id('165966')
-    emp.make_hourly(21.53)
-    clas = emp.classification
-    clas.add_timecard(8.0)
-    clas.add_timecard(8.0)
-    clas.add_timecard(8.0)
-    clas.add_timecard(8.0)
-    clas.add_timecard(8.0)
-    emp.issue_payment()
-
-
-if __name__ == main():
-    main()

@@ -28,23 +28,21 @@ if len(sys.argv) > 1:
 
 def down(f, current_page, pages):
     '''Moves one page down; if at botton wrap to the top; returns current page after print'''
-    command = 'd'
-    if command in ['', 'd']:
-        if current_page <= len(pages) - 1:
-            current_page += 1
-            print(f'[Page {current_page}]:')
-            for x in range(len(pages[current_page-1])):
-                f.seek(pages[current_page-1][x])
-                print(f.readline(), end='')
-            print('\n')
-        # If the current page is the last page
-        else:
-            current_page = 1
-            print(f'[Page {current_page}]:')
-            for x in range(len(pages[current_page-1])):
-                f.seek(pages[current_page-1][x])
-                print(f.readline(), end='')
-            print('\n')
+    if current_page <= len(pages) - 1:
+        current_page += 1
+        print(f'[Page {current_page}]:')
+        for x in range(len(pages[current_page-1])):
+            f.seek(pages[current_page-1][x])
+            print(f.readline(), end='')
+        print('\n')
+    # If the current page is the last page
+    else:
+        current_page = 1
+        print(f'[Page {current_page}]:')
+        for x in range(len(pages[current_page-1])):
+            f.seek(pages[current_page-1][x])
+            print(f.readline(), end='')
+        print('\n')
     return current_page
 
 def up(f, current_page, pages):
@@ -136,7 +134,7 @@ def view(file, size):
             while command != 'q':
                 command = input('Command [u,d,t,b,#,q]: ')
                 # Moves one page down; if at botton wrap to the top
-                if command == 'd':
+                if command in ['', 'd']:
                     current_page = down(f, current_page, pages)
                 # Moves view up 1 page; If at the top, wrap to the bottom
                 if command == 'u':

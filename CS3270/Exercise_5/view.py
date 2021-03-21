@@ -26,6 +26,7 @@ if len(sys.argv) > 1:
     except IndexError:
         view_size = 20
 
+
 def down(f, current_page, pages):
     '''Moves one page down; if at botton wrap to the top; returns current page after print'''
     if current_page <= len(pages) - 1:
@@ -45,9 +46,10 @@ def down(f, current_page, pages):
         print('\n')
     return current_page
 
+
 def up(f, current_page, pages):
     '''Moves up one page; if at top wrap to the bottom; returns current page after print'''
-    if current_page not in [0,1]:
+    if current_page not in [0, 1]:
         current_page -= 1
         print(f'[Page {current_page}]:')
         for x in range(len(pages[current_page-1])):
@@ -65,6 +67,7 @@ def up(f, current_page, pages):
         current_page = len(pages)
     return current_page
 
+
 def top(f, current_page, pages):
     '''Moves to the top page; returns current page after print'''
     current_page = 1
@@ -74,6 +77,7 @@ def top(f, current_page, pages):
         print(f.readline(), end='')
     print('\n')
     return current_page
+
 
 def bottom(f, current_page, pages):
     '''Moves to the bottom page; returns current page after print'''
@@ -86,6 +90,7 @@ def bottom(f, current_page, pages):
     current_page = len(pages)
     return current_page
 
+
 def to_page(f, current_page, pages, command):
     '''Moves to the page passed by user; returns current page after print'''
     current_page = int(command)
@@ -95,6 +100,7 @@ def to_page(f, current_page, pages, command):
         print(f.readline(), end='')
     print('\n')
     return current_page
+
 
 def view(file, size):
     '''Finds the line offsets of the file and then places them in a list.
@@ -138,7 +144,7 @@ def view(file, size):
                     current_page = down(f, current_page, pages)
                 # Moves view up 1 page; If at the top, wrap to the bottom
                 if command == 'u':
-                    current_page = up(f,current_page, pages)
+                    current_page = up(f, current_page, pages)
                 # Moves to the top page
                 if command == 't':
                     current_page = top(f, current_page, pages)
@@ -151,6 +157,7 @@ def view(file, size):
     else:
         print('File is empty!')
         sys.exit()
+
 
 if __name__ == '__main__':
     view(fname, view_size)

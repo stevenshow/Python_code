@@ -1,0 +1,1 @@
+Create a way to pass a filename to create from the pass_gen.py to the file_encrypt.py so that the password can be saved into a file and then encrypted. 

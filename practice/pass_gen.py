@@ -22,7 +22,7 @@ def pass_generator():
     length = get_input()
     multiplier = int(length/4)
     password = []
-    for x in range(multiplier):
+    for _ in range(multiplier):
         #random uppercase letter
         password.append(chr(random.randint(65,90)))
         #random lower case letter

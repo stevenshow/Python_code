@@ -11,6 +11,7 @@ import os
 import random
 
 import pyperclip
+import file_encrypt
 
 path = os.path.dirname(__file__)
 
@@ -44,6 +45,9 @@ def pass_generator():
         'Would you like to copy this password to your clipboard? [Y/N]: ')
     if (copy_to_clip.lower() == 'y'):
         to_clipboard(password_str)
+        write_out = input('Would you like to write to a an encrypted file? [Y/N]: ')
+        if write_out.lower() == 'y':
+            file_encrypt.main()
     else:
         exit
 

@@ -1,9 +1,10 @@
 '''Command line program that takes a file name and a view size
 and then outputs the file 1 page at a time based on the view size
 Created by: Steven Schoebinger 03/19/2021'''
-import sys
-import os
 import math
+import os
+import sys
+
 # pylint: disable=invalid-name
 # [X] Get input from user to know where to naviage the page
 # [X] Get files offsets to sort pages accordingly
@@ -143,17 +144,21 @@ def view(file, size):
                 if command in ['', 'd']:
                     current_page = down(f, current_page, pages)
                 # Moves view up 1 page; If at the top, wrap to the bottom
-                if command == 'u':
+                elif command == 'u':
                     current_page = up(f, current_page, pages)
                 # Moves to the top page
-                if command == 't':
+                elif command == 't':
                     current_page = top(f, current_page, pages)
                 # Moves to the bottom page
-                if command == 'b':
+                elif command == 'b':
                     current_page = bottom(f, current_page, pages)
                 # Move to the specified page number
-                if command.isdigit() and int(command) <= len(pages) and int(command) > 0:
+                elif command.isdigit() and int(command) <= len(pages) and int(command) > 0:
                     current_page = to_page(f, current_page, pages, command)
+                elif command.isdigit() and int(command) > len(pages):
+                    current_page = top(f, current_page, pages)
+                elif '-' in command or command == '0':
+                    current_page = bottom(f, current_page, pages)
     else:
         print('File is empty!')
         sys.exit()

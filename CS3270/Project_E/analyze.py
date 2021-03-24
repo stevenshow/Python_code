@@ -4,13 +4,14 @@ import os
 import sys
 
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 
 # [X] Check for any .dat files in directory
 # [X] Make .ini parser
-# [] Make .dat parser
-# [] Create jagged data and plot (Find pulse) pt_1
+# [X] Make .dat parser
+# [] Create jagged data and plot (Find Area) pt_1
 # [] Check for piggyback pt_2
-# [] Create smoothed data and plot (Find area) pt_1
+# [] Create smoothed data and plot (Find Pulse) pt_1
 # [] Area is the sum of the of the values starting at the pulse start and going for width values, or till the start of next pulse
 
 path = os.path.dirname(os.path.abspath(__file__)) + '/'
@@ -48,41 +49,52 @@ def create_jagged():
                 raw_dat_data.append(int(data) * -1)
             dat_dict_raw[dat_files[x]] = raw_dat_data
             raw_dat_data = arr.array('i', [])
-    file = dat_dict_raw['2_Record2308.dat']
-    plt.plot(file)
-    plt.axis([0, len(file), min(file), max(file)])
-    plt.show()
+    # Creates pdf for each raw graph
+    for fname in dat_dict_raw:
+        file = dat_dict_raw[fname]
+        plot1 = plt.figure()
+        plt.plot(file)
+        plt.axis([0, len(file), min(file), max(file)])
+        #plt.show()
+        plot1.savefig(path + fname.replace('.dat', '_raw.pdf'), bbox_inches='tight')
+
 
 def create_smooth():
     '''Starting with the 4th point of the file, and ending with the 4th from the last,
     replace each of those points with the following average in a new array
     (Pi-3 + 2Pi-2 + 3Pi-1 + 3Pi + 3∗Pi+1 + 2Pi+2 + Pi+3)//15'''
     s_data = arr.array('i', [])
-    #end = len(dat_arr_dict_raw['as_ch01-0537xx_Record1042.dat'][3:-3])
-
     # Set up first 3 values in the smooth array
     for file in dat_dict_raw.keys():
         for x in range(0, len(dat_dict_raw[file])):
             if x < 3:
                 s_data.append(dat_dict_raw[file][x])
                 #dat_dict_smooth[file] = s_data
-            elif x < len(dat_dict_raw[file]) -3:
+            elif x < len(dat_dict_raw[file]) - 3:
                 s_data.append((dat_dict_raw[file][x-3]
-                            + 2*dat_dict_raw[file][x-2]
-                            + 3*dat_dict_raw[file][x]
-                            + 3*dat_dict_raw[file][x+1]
-                            + 2*dat_dict_raw[file][x+2]
-                            + dat_dict_raw[file][x+3]) //15)
+                               + 2*dat_dict_raw[file][x-2]
+                               + 3*dat_dict_raw[file][x]
+                               + 3*dat_dict_raw[file][x+1]
+                               + 2*dat_dict_raw[file][x+2]
+                               + dat_dict_raw[file][x+3]) // 15)
             else:
                 s_data.append(dat_dict_raw[file][x])
-        #print(s_data)
         dat_dict_smooth[file] = s_data
         s_data = arr.array('i', [])
-    #print(dat_dict_smooth['2_Record2308.dat'])
-    file = dat_dict_smooth['2_Record2308.dat']
-    plt.plot(file)
-    plt.axis([0, len(file), min(file), max(file)])
-    plt.show()
+    # Creates pdf for each smooth graph
+    for fname in dat_dict_smooth:
+        file = dat_dict_smooth[fname]
+        plot1 = plt.figure()
+        plt.plot(file)
+        plt.axis([0, len(file), min(file), max(file)])
+        #plt.show()
+        plot1.savefig(path + fname.replace('.dat', '_smooth.pdf'), bbox_inches='tight')
+
+def find_pulse():
+    pass
+
+def find_area():
+    pass
 
 def main():
     dat_parser()

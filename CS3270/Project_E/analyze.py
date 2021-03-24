@@ -55,8 +55,9 @@ def create_jagged():
         plot1 = plt.figure()
         plt.plot(file)
         plt.axis([0, len(file), min(file), max(file)])
-        #plt.show()
-        plot1.savefig(path + fname.replace('.dat', '_raw.pdf'), bbox_inches='tight')
+        # plt.show()
+        plot1.savefig(path + fname.replace('.dat', '_raw.pdf'),
+                      bbox_inches='tight')
 
 
 def create_smooth():
@@ -87,14 +88,30 @@ def create_smooth():
         plot1 = plt.figure()
         plt.plot(file)
         plt.axis([0, len(file), min(file), max(file)])
-        #plt.show()
-        plot1.savefig(path + fname.replace('.dat', '_smooth.pdf'), bbox_inches='tight')
+        # plt.show()
+        plot1.savefig(path + fname.replace('.dat',
+                                           '_smooth.pdf'), bbox_inches='tight')
+
 
 def find_pulse():
+    '''Find a pulse by looking for a rise over 3 consecutive points (Yi, Yi+1, Yi+2)
+    if the rise (Yi+2 - Yi) exceeds vt, then a pulse begins at position i.  After finding
+    a pulse, move forward through the data starting at Yi+2 until the sample starts to decrease
+    before looking for next pulse.
+    
+    Check for piggyback pulses (a weak pulse followed quickly by another pulse).  When adjacent
+    pulses begin within pulse_delta positions of each other, find how many points between the peak
+    of the first pulse and the start of the second pulse fall below drop_ratio times the peak
+    of the first pulse.  If the number exceeds below_drop_ratio, omit the first pulse.'''
     pass
+    
+
 
 def find_area():
+    '''The area is the sum of the values starting at the pulse start and going for width samples,
+    or until the start of the next pulse, whichever comes first. Use raw data for area computation'''
     pass
+
 
 def main():
     dat_parser()

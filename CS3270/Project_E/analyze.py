@@ -16,7 +16,8 @@ import matplotlib.pyplot as plt
 path = os.path.dirname(os.path.abspath(__file__)) + '/'
 dat_files = []
 ini_file = {}
-dat_arr_dict_raw = {}
+dat_dict_raw = {}
+dat_dict_smooth = {}
 
 
 def ini_parser(file):
@@ -40,21 +41,48 @@ def create_jagged():
     find how many points between the peak of the first pulse and the start of the second pulse 
     fall below drop_ratiotimes the peak of the first pulse. If the number exceeds below_drop_ratio, 
     omit the first pulse from further consideration—it is not a pulse of interest.'''
-    dat_data = arr.array('i', [])
+    raw_dat_data = arr.array('i', [])
     for x in range(len(dat_files)):
         with open(path + dat_files[x], 'r') as f:
             for data in f.readlines():
-                dat_data.append(int(data) * -1)
-            dat_arr_dict_raw[dat_files[x]] = dat_data
-    # plt.plot(dat_data)
-    #plt.axis([0, len(dat_data), min(dat_data), max(dat_data)])
-    # plt.show()
-    # print(dat_arr_list)
-
+                raw_dat_data.append(int(data) * -1)
+            dat_dict_raw[dat_files[x]] = raw_dat_data
+            raw_dat_data = arr.array('i', [])
+    file = dat_dict_raw['2_Record2308.dat']
+    plt.plot(file)
+    plt.axis([0, len(file), min(file), max(file)])
+    plt.show()
 
 def create_smooth():
-    pass
+    '''Starting with the 4th point of the file, and ending with the 4th from the last,
+    replace each of those points with the following average in a new array
+    (Pi-3 + 2Pi-2 + 3Pi-1 + 3Pi + 3∗Pi+1 + 2Pi+2 + Pi+3)//15'''
+    s_data = arr.array('i', [])
+    #end = len(dat_arr_dict_raw['as_ch01-0537xx_Record1042.dat'][3:-3])
 
+    # Set up first 3 values in the smooth array
+    for file in dat_dict_raw.keys():
+        for x in range(0, len(dat_dict_raw[file])):
+            if x < 3:
+                s_data.append(dat_dict_raw[file][x])
+                #dat_dict_smooth[file] = s_data
+            elif x < len(dat_dict_raw[file]) -3:
+                s_data.append((dat_dict_raw[file][x-3]
+                            + 2*dat_dict_raw[file][x-2]
+                            + 3*dat_dict_raw[file][x]
+                            + 3*dat_dict_raw[file][x+1]
+                            + 2*dat_dict_raw[file][x+2]
+                            + dat_dict_raw[file][x+3]) //15)
+            else:
+                s_data.append(dat_dict_raw[file][x])
+        #print(s_data)
+        dat_dict_smooth[file] = s_data
+        s_data = arr.array('i', [])
+    #print(dat_dict_smooth['2_Record2308.dat'])
+    file = dat_dict_smooth['2_Record2308.dat']
+    plt.plot(file)
+    plt.axis([0, len(file), min(file), max(file)])
+    plt.show()
 
 def main():
     dat_parser()
@@ -65,6 +93,7 @@ def main():
     drop_ratio = ini_file['drop_ratio']
     below_drop_ratio = ini_file['below_drop_ratio']
     create_jagged()
+    create_smooth()
 
 
 if __name__ == '__main__':

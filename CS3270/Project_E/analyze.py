@@ -106,10 +106,7 @@ def find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio):
     pulses begin within pulse_delta positions of each other, find how many points between the peak
     of the first pulse and the start of the second pulse fall below drop_ratio times the peak
     of the first pulse.  If the number exceeds below_drop_ratio, omit the first pulse.'''
-    #file = dat_dict_smooth['as_ch01-0537xx_Record1042.dat']
-    #pulses = []
     # TODO Need to figure out why file 3388 is the only file that is off on pulse location
-    # print(dat_dict_smooth['2_record3388.dat'][0])
     not_considered = []
     for file in dat_files:
         pulses[file] = []

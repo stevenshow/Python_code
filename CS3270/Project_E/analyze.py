@@ -104,7 +104,7 @@ def find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio):
     pulses begin within pulse_delta positions of each other, find how many points between the peak
     of the first pulse and the start of the second pulse fall below drop_ratio times the peak
     of the first pulse.  If the number exceeds below_drop_ratio, omit the first pulse.'''
-    file = dat_dict_smooth['2_Record2308.dat']
+    file = dat_dict_smooth['2_Record3388.dat']
     #pulses = []
     not_considered = []
     looking = True
@@ -122,15 +122,19 @@ def find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio):
 def find_area(pulses, width):
     '''The area is the sum of the values starting at the pulse start and going for width samples,
     or until the start of the next pulse, whichever comes first. Use raw data for area computation'''
-    file = dat_dict_raw['2_Record2308.dat']
+    file = dat_dict_raw['2_Record3388.dat']
     counter = 0
     area = 0
     # TODO Need to figure out how to stop at the next pulse 
     for pulse in pulses:
-       print(pulse)
-       print(pulses.index(pulse))
-       # while file[pulse] < file[pulses[pulses.index(pulse)]+1] and counter < width:
-        #    area += file[pulse]
+        while counter < width:
+            area += file[pulse+counter]
+            counter+=1
+            if pulse+counter in pulses:
+                print(area)
+                area = 0
+                counter = 0
+                break
     print(area)
 
 def main():

@@ -1,5 +1,6 @@
 import array as arr
 import glob
+import itertools
 import os
 import sys
 
@@ -19,7 +20,7 @@ dat_files = []
 ini_file = {}
 dat_dict_raw = {}
 dat_dict_smooth = {}
-
+pulses = []
 
 def ini_parser(file):
     '''Gets the .ini file from command line and parses data into ini_file'''
@@ -50,14 +51,14 @@ def create_jagged():
             dat_dict_raw[dat_files[x]] = raw_dat_data
             raw_dat_data = arr.array('i', [])
     # Creates pdf for each raw graph
-    for fname in dat_dict_raw:
-        file = dat_dict_raw[fname]
-        plot1 = plt.figure()
-        plt.plot(file)
-        plt.axis([0, len(file), min(file), max(file)])
-        # plt.show()
-        plot1.savefig(path + fname.replace('.dat', '_raw.pdf'),
-                      bbox_inches='tight')
+    # for fname in dat_dict_raw:
+    #     file = dat_dict_raw[fname]
+    #     plot1 = plt.figure()
+    #     plt.plot(file)
+    #     plt.axis([0, len(file), min(file), max(file)])
+    #     # plt.show()
+    #     plot1.savefig(path + fname.replace('.dat', '_raw.pdf'),
+    #                   bbox_inches='tight')
 
 
 def create_smooth():
@@ -83,14 +84,14 @@ def create_smooth():
         dat_dict_smooth[file] = s_data
         s_data = arr.array('i', [])
     # Creates pdf for each smooth graph
-    for fname in dat_dict_smooth:
-        file = dat_dict_smooth[fname]
-        plot1 = plt.figure()
-        plt.plot(file)
-        plt.axis([0, len(file), min(file), max(file)])
-        # plt.show()
-        plot1.savefig(path + fname.replace('.dat',
-                                           '_smooth.pdf'), bbox_inches='tight')
+    # for fname in dat_dict_smooth:
+    #     file = dat_dict_smooth[fname]
+    #     plot1 = plt.figure()
+    #     plt.plot(file)
+    #     plt.axis([0, len(file), min(file), max(file)])
+    #     # plt.show()
+    #     plot1.savefig(path + fname.replace('.dat',
+    #                                        '_smooth.pdf'), bbox_inches='tight')
 
 
 def find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio):
@@ -104,19 +105,33 @@ def find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio):
     of the first pulse and the start of the second pulse fall below drop_ratio times the peak
     of the first pulse.  If the number exceeds below_drop_ratio, omit the first pulse.'''
     file = dat_dict_smooth['2_Record2308.dat']
-    pulses = []
-    for y in range(len(file)):
-        if file[y+2] - file[y] > vt:
+    #pulses = []
+    not_considered = []
+    looking = True
+    # TODO Need to figure out why file 3388 is the only file that is off on pulse location
+    for y in range(len(file) - 2):
+        if file[y+2] - file[y] > vt and y not in not_considered:
             pulses.append(y)
+            not_considered.append(y+1)
             print('pulse at: ' + str(pulses))
-    for x in pulses:
-        pass
+            for x in range(y+2, len(file)):
+                if file[x] < file[x+1]:
+                    not_considered.append(x)
+                else: break
     
-def find_area():
+def find_area(pulses, width):
     '''The area is the sum of the values starting at the pulse start and going for width samples,
     or until the start of the next pulse, whichever comes first. Use raw data for area computation'''
-    pass
-
+    file = dat_dict_raw['2_Record2308.dat']
+    counter = 0
+    area = 0
+    # TODO Need to figure out how to stop at the next pulse 
+    for pulse in pulses:
+       print(pulse)
+       print(pulses.index(pulse))
+       # while file[pulse] < file[pulses[pulses.index(pulse)]+1] and counter < width:
+        #    area += file[pulse]
+    print(area)
 
 def main():
     dat_parser()
@@ -129,6 +144,7 @@ def main():
     create_jagged()
     create_smooth()
     find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio)
+    find_area(pulses, width)
 
 if __name__ == '__main__':
     main()

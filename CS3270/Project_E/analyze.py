@@ -20,7 +20,9 @@ dat_files = []
 ini_file = {}
 dat_dict_raw = {}
 dat_dict_smooth = {}
-pulses = []
+pulses = {}
+piggy_pulse = {}
+
 
 def ini_parser(file):
     '''Gets the .ini file from command line and parses data into ini_file'''
@@ -99,43 +101,77 @@ def find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio):
     if the rise (Yi+2 - Yi) exceeds vt, then a pulse begins at position i.  After finding
     a pulse, move forward through the data starting at Yi+2 until the sample starts to decrease
     before looking for next pulse.
-    
+
     Check for piggyback pulses (a weak pulse followed quickly by another pulse).  When adjacent
     pulses begin within pulse_delta positions of each other, find how many points between the peak
     of the first pulse and the start of the second pulse fall below drop_ratio times the peak
     of the first pulse.  If the number exceeds below_drop_ratio, omit the first pulse.'''
-    file = dat_dict_smooth['2_Record3388.dat']
+    #file = dat_dict_smooth['as_ch01-0537xx_Record1042.dat']
     #pulses = []
-    not_considered = []
-    looking = True
     # TODO Need to figure out why file 3388 is the only file that is off on pulse location
-    for y in range(len(file) - 2):
-        if file[y+2] - file[y] > vt and y not in not_considered:
-            pulses.append(y)
-            not_considered.append(y+1)
-            print('pulse at: ' + str(pulses))
-            for x in range(y+2, len(file)):
-                if file[x] < file[x+1]:
-                    not_considered.append(x)
-                else: break
-    
+    # print(dat_dict_smooth['2_record3388.dat'][0])
+    not_considered = []
+    for file in dat_files:
+        pulses[file] = []
+        #pulse_start = []
+        for y in range(len(dat_dict_smooth[file]) - 2):
+            # If a rise over 3 points (yi, yi+1, yi+2) is greater than vt, a pulse starts at i 
+            if dat_dict_smooth[file][y+2] - dat_dict_smooth[file][y] > vt and y not in not_considered:
+                pulses[file].append(y)
+                not_considered.append(dat_dict_smooth[file][y+1])
+                # Traverse from y+2 until a decrease before looking for next pulse
+                for x in range(y+1, len(dat_dict_smooth[file])):
+                    if dat_dict_smooth[file][x] < dat_dict_smooth[file][x+1]:
+                        not_considered.append(x)
+                    else:
+                        break
+        not_considered = []
+    piggy_back(pulse_delta, drop_ratio, below_drop_ratio)
+    print('pulse at: ' + str(pulses))
+
+
+def piggy_back(pulse_delta, drop_ratio, below_drop_ratio):
+    for file in dat_files:
+        for x in range(len(pulses)-1):
+            if pulses[x] - pulses[x+1] <= pulse_delta:
+                counter = 0
+                search_array = dat_dict_smooth['as_ch01-0537xx_Record1042.dat'][pulses[x]:pulses[x+1]]
+                peak = max(search_array)
+                p_index = search_array.index(peak)
+                search_array = search_array[p_index:]
+                for y in range(len(search_array)):
+                    if y < drop_ratio * peak:
+                        counter += 1
+                    if counter > below_drop_ratio:
+                        piggy_pulse[file][0].append([pulses[x]])
+                        # pulses.remove(pulses[x])
+                        counter = 0
+                        print(piggy_pulse)
+                #print(f'Peak between {pulses[x]} and {pulses[x+1]} = ', peak)
+        # print(pulses_to_remove)
+        for pulse in piggy_pulse[file]:
+            pulses.remove(pulse)
+        print(pulses)
+        # pulses.remove(pulses[x])
+
+
 def find_area(pulses, width):
     '''The area is the sum of the values starting at the pulse start and going for width samples,
     or until the start of the next pulse, whichever comes first. Use raw data for area computation'''
-    file = dat_dict_raw['2_Record3388.dat']
+    file = dat_dict_raw['as_ch01-0537xx_Record1042.dat']
     counter = 0
     area = 0
-    # TODO Need to figure out how to stop at the next pulse 
     for pulse in pulses:
         while counter < width:
             area += file[pulse+counter]
-            counter+=1
+            counter += 1
             if pulse+counter in pulses:
                 print(area)
                 area = 0
                 counter = 0
                 break
     print(area)
+
 
 def main():
     dat_parser()
@@ -149,6 +185,11 @@ def main():
     create_smooth()
     find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio)
     find_area(pulses, width)
+
+    with open('ch01Smooth.dat', 'a') as f:
+        for x in dat_dict_smooth['as_ch01-0537xx_Record1042.dat']:
+            f.write(str(x)+'\n')
+
 
 if __name__ == '__main__':
     main()

@@ -93,7 +93,7 @@ def create_smooth():
                                            '_smooth.pdf'), bbox_inches='tight')
 
 
-def find_pulse():
+def find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio):
     '''Find a pulse by looking for a rise over 3 consecutive points (Yi, Yi+1, Yi+2)
     if the rise (Yi+2 - Yi) exceeds vt, then a pulse begins at position i.  After finding
     a pulse, move forward through the data starting at Yi+2 until the sample starts to decrease
@@ -103,10 +103,15 @@ def find_pulse():
     pulses begin within pulse_delta positions of each other, find how many points between the peak
     of the first pulse and the start of the second pulse fall below drop_ratio times the peak
     of the first pulse.  If the number exceeds below_drop_ratio, omit the first pulse.'''
-    pass
+    file = dat_dict_smooth['2_Record2308.dat']
+    pulses = []
+    for y in range(len(file)):
+        if file[y+2] - file[y] > vt:
+            pulses.append(y)
+            print('pulse at: ' + str(pulses))
+    for x in pulses:
+        pass
     
-
-
 def find_area():
     '''The area is the sum of the values starting at the pulse start and going for width samples,
     or until the start of the next pulse, whichever comes first. Use raw data for area computation'''
@@ -116,14 +121,14 @@ def find_area():
 def main():
     dat_parser()
     ini_parser('gage2scope.ini')  # sys.argv[1] for final product
-    vt = ini_file['vt']
-    width = ini_file['width']
-    pulse_delta = ini_file['pulse_delta']
-    drop_ratio = ini_file['drop_ratio']
-    below_drop_ratio = ini_file['below_drop_ratio']
+    vt = int(ini_file['vt'])
+    width = int(ini_file['width'])
+    pulse_delta = int(ini_file['pulse_delta'])
+    drop_ratio = float(ini_file['drop_ratio'])
+    below_drop_ratio = float(ini_file['below_drop_ratio'])
     create_jagged()
     create_smooth()
-
+    find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio)
 
 if __name__ == '__main__':
     main()

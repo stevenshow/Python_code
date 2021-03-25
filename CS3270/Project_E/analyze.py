@@ -10,10 +10,10 @@ from matplotlib.backends.backend_pdf import PdfPages
 # [X] Check for any .dat files in directory
 # [X] Make .ini parser
 # [X] Make .dat parser
-# [] Create jagged data and plot (Find Area) pt_1
+# [X] Create jagged data and plot (Find Area) pt_1
 # [] Check for piggyback pt_2
-# [] Create smoothed data and plot (Find Pulse) pt_1
-# [] Area is the sum of the of the values starting at the pulse start and going for width values, or till the start of next pulse
+# [X] Create smoothed data and plot (Find Pulse) pt_1
+# [X] Area is the sum of the of the values starting at the pulse start and going for width values, or till the start of next pulse
 
 path = os.path.dirname(os.path.abspath(__file__)) + '/'
 dat_files = []

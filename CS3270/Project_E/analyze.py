@@ -22,7 +22,7 @@ dat_dict_raw = {}
 dat_dict_smooth = {}
 pulses = {}
 piggy_pulse = {}
-
+area_dict = {}
 
 def ini_parser(file):
     '''Gets the .ini file from command line and parses data into ini_file'''
@@ -110,9 +110,10 @@ def find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio):
     not_considered = []
     for file in dat_files:
         pulses[file] = []
+        not_considered = []
         #pulse_start = []
         for y in range(len(dat_dict_smooth[file]) - 2):
-            # If a rise over 3 points (yi, yi+1, yi+2) is greater than vt, a pulse starts at i 
+            # If a rise over 3 points (yi, yi+1, yi+2) is greater than vt, a pulse starts at i
             if dat_dict_smooth[file][y+2] - dat_dict_smooth[file][y] > vt and y not in not_considered:
                 pulses[file].append(y)
                 not_considered.append(dat_dict_smooth[file][y+1])
@@ -122,32 +123,29 @@ def find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio):
                         not_considered.append(x)
                     else:
                         break
-        not_considered = []
     piggy_back(pulse_delta, drop_ratio, below_drop_ratio)
     print('pulse at: ' + str(pulses))
 
 
 def piggy_back(pulse_delta, drop_ratio, below_drop_ratio):
     for file in dat_files:
-        for x in range(len(pulses)-1):
-            if pulses[x] - pulses[x+1] <= pulse_delta:
+        piggy_pulse[file] = []
+        for x in range(len(pulses[file])-1):
+            if pulses[file][x] - pulses[file][x+1] <= pulse_delta:
                 counter = 0
-                search_array = dat_dict_smooth['as_ch01-0537xx_Record1042.dat'][pulses[x]:pulses[x+1]]
+                search_array = dat_dict_smooth[file][pulses[file]
+                                                     [x]:pulses[file][x+1]]
                 peak = max(search_array)
                 p_index = search_array.index(peak)
                 search_array = search_array[p_index:]
                 for y in range(len(search_array)):
-                    if y < drop_ratio * peak:
+                    if search_array[y] < drop_ratio * peak:
                         counter += 1
                     if counter > below_drop_ratio:
-                        piggy_pulse[file][0].append([pulses[x]])
-                        # pulses.remove(pulses[x])
+                        piggy_pulse[file].append(pulses[file][x])
                         counter = 0
-                        print(piggy_pulse)
-                #print(f'Peak between {pulses[x]} and {pulses[x+1]} = ', peak)
-        # print(pulses_to_remove)
         for pulse in piggy_pulse[file]:
-            pulses.remove(pulse)
+            pulses[file].remove(pulse)
         print(pulses)
         # pulses.remove(pulses[x])
 
@@ -158,16 +156,18 @@ def find_area(pulses, width):
     file = dat_dict_raw['as_ch01-0537xx_Record1042.dat']
     counter = 0
     area = 0
-    for pulse in pulses:
-        while counter < width:
-            area += file[pulse+counter]
-            counter += 1
-            if pulse+counter in pulses:
-                print(area)
-                area = 0
-                counter = 0
-                break
-    print(area)
+    for file in dat_files:
+        area_dict[file] = []
+        for pulse in pulses[file]:
+            area = 0
+            counter = 0
+            while counter < width:
+                area += dat_dict_raw[file][pulse+counter]
+                counter += 1
+                if pulse+counter in pulses[file]:
+                    break
+            area_dict[file].append(area)
+        print(area)
 
 
 def main():
@@ -182,10 +182,11 @@ def main():
     create_smooth()
     find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio)
     find_area(pulses, width)
-
-    with open('ch01Smooth.dat', 'a') as f:
-        for x in dat_dict_smooth['as_ch01-0537xx_Record1042.dat']:
-            f.write(str(x)+'\n')
+    print(piggy_pulse)
+    
+    #with open('ch01Smooth.dat', 'a') as f:
+    #    for x in dat_dict_smooth['as_ch01-0537xx_Record1042.dat']:
+    #        f.write(str(x)+'\n')
 
 
 if __name__ == '__main__':

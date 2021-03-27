@@ -24,6 +24,7 @@ pulses = {}
 piggy_pulse = {}
 area_dict = {}
 
+
 def ini_parser(file):
     '''Gets the .ini file from command line and parses data into ini_file'''
     with open(path + file, 'r') as f:
@@ -41,9 +42,9 @@ def dat_parser():
 
 
 def create_jagged():
-    ''''When adjacentpulses begin within pulse_deltapositions of each other, 
-    find how many points between the peak of the first pulse and the start of the second pulse 
-    fall below drop_ratiotimes the peak of the first pulse. If the number exceeds below_drop_ratio, 
+    ''''When adjacentpulses begin within pulse_deltapositions of each other,
+    find how many points between the peak of the first pulse and the start of the second pulse
+    fall below drop_ratiotimes the peak of the first pulse. If the number exceeds below_drop_ratio,
     omit the first pulse from further consideration—it is not a pulse of interest.'''
     raw_dat_data = arr.array('i', [])
     for x in range(len(dat_files)):
@@ -53,14 +54,14 @@ def create_jagged():
             dat_dict_raw[dat_files[x]] = raw_dat_data
             raw_dat_data = arr.array('i', [])
     # Creates pdf for each raw graph
-    # for fname in dat_dict_raw:
-    #     file = dat_dict_raw[fname]
-    #     plot1 = plt.figure()
-    #     plt.plot(file)
-    #     plt.axis([0, len(file), min(file), max(file)])
-    #     # plt.show()
-    #     plot1.savefig(path + fname.replace('.dat', '_raw.pdf'),
-    #                   bbox_inches='tight')
+    for fname in dat_dict_raw:
+        file = dat_dict_raw[fname]
+        plot1 = plt.figure()
+        plt.plot(file)
+        plt.axis([0, len(file), min(file), max(file)])
+        # plt.show()
+        plot1.savefig(path + fname.replace('.dat', '_raw.pdf'),
+                      bbox_inches='tight')
 
 
 def create_smooth():
@@ -73,7 +74,7 @@ def create_smooth():
         for x in range(0, len(dat_dict_raw[file])):
             if x < 3:
                 s_data.append(dat_dict_raw[file][x])
-                #dat_dict_smooth[file] = s_data
+                # dat_dict_smooth[file] = s_data
             elif x < len(dat_dict_raw[file]) - 3:
                 s_data.append((dat_dict_raw[file][x-3]
                                + 2*dat_dict_raw[file][x-2]
@@ -85,15 +86,15 @@ def create_smooth():
                 s_data.append(dat_dict_raw[file][x])
         dat_dict_smooth[file] = s_data
         s_data = arr.array('i', [])
-    # Creates pdf for each smooth graph
-    # for fname in dat_dict_smooth:
-    #     file = dat_dict_smooth[fname]
-    #     plot1 = plt.figure()
-    #     plt.plot(file)
-    #     plt.axis([0, len(file), min(file), max(file)])
-    #     # plt.show()
-    #     plot1.savefig(path + fname.replace('.dat',
-    #                                        '_smooth.pdf'), bbox_inches='tight')
+     # Creates pdf for each smooth graph
+    for fname in dat_dict_smooth:
+        file = dat_dict_smooth[fname]
+        plot1 = plt.figure()
+        plt.plot(file)
+        plt.axis([0, len(file), min(file), max(file)])
+        # plt.show()
+        plot1.savefig(path + fname.replace('.dat',
+                                           '_smooth.pdf'), bbox_inches='tight')
 
 
 def find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio):
@@ -111,7 +112,7 @@ def find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio):
     for file in dat_files:
         pulses[file] = []
         not_considered = []
-        #pulse_start = []
+        # pulse_start = []
         for y in range(len(dat_dict_smooth[file]) - 2):
             # If a rise over 3 points (yi, yi+1, yi+2) is greater than vt, a pulse starts at i
             if dat_dict_smooth[file][y+2] - dat_dict_smooth[file][y] > vt and y not in not_considered:
@@ -124,7 +125,6 @@ def find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio):
                     else:
                         break
     piggy_back(pulse_delta, drop_ratio, below_drop_ratio)
-    print('pulse at: ' + str(pulses))
 
 
 def piggy_back(pulse_delta, drop_ratio, below_drop_ratio):
@@ -146,8 +146,6 @@ def piggy_back(pulse_delta, drop_ratio, below_drop_ratio):
                         counter = 0
         for pulse in piggy_pulse[file]:
             pulses[file].remove(pulse)
-        print(pulses)
-        # pulses.remove(pulses[x])
 
 
 def find_area(pulses, width):
@@ -167,12 +165,11 @@ def find_area(pulses, width):
                 if pulse+counter in pulses[file]:
                     break
             area_dict[file].append(area)
-        print(area)
 
 
 def main():
     dat_parser()
-    ini_parser('gage2scope.ini')  # sys.argv[1] for final product
+    ini_parser(sys.argv[1])  # sys.argv[1] for final product
     vt = int(ini_file['vt'])
     width = int(ini_file['width'])
     pulse_delta = int(ini_file['pulse_delta'])
@@ -182,11 +179,13 @@ def main():
     create_smooth()
     find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio)
     find_area(pulses, width)
-    print(piggy_pulse)
-    
-    #with open('ch01Smooth.dat', 'a') as f:
-    #    for x in dat_dict_smooth['as_ch01-0537xx_Record1042.dat']:
-    #        f.write(str(x)+'\n')
+    for file in dat_files:
+        print(file)
+        for x in range(len(piggy_pulse[file])):
+            print('Found piggyback at ', piggy_pulse[file][x])
+        for y in range(len(pulses[file])):
+            print(pulses[file][y], area_dict[file][y])
+        print('\n')
 
 
 if __name__ == '__main__':

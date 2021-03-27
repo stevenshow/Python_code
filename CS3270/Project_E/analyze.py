@@ -54,14 +54,14 @@ def create_jagged():
             dat_dict_raw[dat_files[x]] = raw_dat_data
             raw_dat_data = arr.array('i', [])
     # Creates pdf for each raw graph
-    for fname in dat_dict_raw:
-        file = dat_dict_raw[fname]
-        plot1 = plt.figure()
-        plt.plot(file)
-        plt.axis([0, len(file), min(file), max(file)])
-        # plt.show()
-        plot1.savefig(path + fname.replace('.dat', '_raw.pdf'),
-                      bbox_inches='tight')
+    #for fname in dat_dict_raw:
+    #    file = dat_dict_raw[fname]
+    #    plot1 = plt.figure()
+    #    plt.plot(file)
+    #    plt.axis([0, len(file), min(file), max(file)])
+    #    # plt.show()
+    #    plot1.savefig(path + fname.replace('.dat', '_raw.pdf'),
+    #                  bbox_inches='tight')
 
 
 def create_smooth():
@@ -74,10 +74,10 @@ def create_smooth():
         for x in range(0, len(dat_dict_raw[file])):
             if x < 3:
                 s_data.append(dat_dict_raw[file][x])
-                # dat_dict_smooth[file] = s_data
             elif x < len(dat_dict_raw[file]) - 3:
                 s_data.append((dat_dict_raw[file][x-3]
                                + 2*dat_dict_raw[file][x-2]
+                               + 3*dat_dict_raw[file][x-1]
                                + 3*dat_dict_raw[file][x]
                                + 3*dat_dict_raw[file][x+1]
                                + 2*dat_dict_raw[file][x+2]
@@ -87,14 +87,14 @@ def create_smooth():
         dat_dict_smooth[file] = s_data
         s_data = arr.array('i', [])
      # Creates pdf for each smooth graph
-    for fname in dat_dict_smooth:
-        file = dat_dict_smooth[fname]
-        plot1 = plt.figure()
-        plt.plot(file)
-        plt.axis([0, len(file), min(file), max(file)])
-        # plt.show()
-        plot1.savefig(path + fname.replace('.dat',
-                                           '_smooth.pdf'), bbox_inches='tight')
+    #for fname in dat_dict_smooth:
+    #    file = dat_dict_smooth[fname]
+    #    plot1 = plt.figure()
+    #    plt.plot(file)
+    #    plt.axis([0, len(file), min(file), max(file)])
+    #    # plt.show()
+    #    plot1.savefig(path + fname.replace('.dat',
+    #                                       '_smooth.pdf'), bbox_inches='tight')
 
 
 def find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio):
@@ -107,7 +107,6 @@ def find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio):
     pulses begin within pulse_delta positions of each other, find how many points between the peak
     of the first pulse and the start of the second pulse fall below drop_ratio times the peak
     of the first pulse.  If the number exceeds below_drop_ratio, omit the first pulse.'''
-    # TODO Need to figure out why file 3388 is the only file that is off on pulse location
     not_considered = []
     for file in dat_files:
         pulses[file] = []
@@ -116,6 +115,7 @@ def find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio):
         for y in range(len(dat_dict_smooth[file]) - 2):
             # If a rise over 3 points (yi, yi+1, yi+2) is greater than vt, a pulse starts at i
             if dat_dict_smooth[file][y+2] - dat_dict_smooth[file][y] > vt and y not in not_considered:
+                #print(dat_dict_smooth[file][y], dat_dict_smooth[file][y+1], dat_dict_smooth[file][y+2], dat_dict_smooth[file][y+3])
                 pulses[file].append(y)
                 not_considered.append(dat_dict_smooth[file][y+1])
                 # Traverse from y+2 until a decrease before looking for next pulse
@@ -169,7 +169,7 @@ def find_area(pulses, width):
 
 def main():
     dat_parser()
-    ini_parser(sys.argv[1])  # sys.argv[1] for final product
+    ini_parser('gage2scope.ini')  # sys.argv[1] for final product
     vt = int(ini_file['vt'])
     width = int(ini_file['width'])
     pulse_delta = int(ini_file['pulse_delta'])
@@ -180,13 +180,12 @@ def main():
     find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio)
     find_area(pulses, width)
     for file in dat_files:
-        print(file)
+        print(file + ':')
         for x in range(len(piggy_pulse[file])):
-            print('Found piggyback at ', piggy_pulse[file][x])
+            print('Found piggyback at ' + str(piggy_pulse[file][x]))
         for y in range(len(pulses[file])):
-            print(pulses[file][y], area_dict[file][y])
+            print(str(pulses[file][y]) +' (' + str(area_dict[file][y]) + ')')
         print('\n')
-
 
 if __name__ == '__main__':
     main()

@@ -42,6 +42,7 @@ def dat_parser():
 
 
 def pdf_output():
+    '''Outputs the graphs to their respective filname.pdf'''
     for fname in dat_files:
         with PdfPages(path + fname.replace('.dat', '.pdf')) as export_pdf:
             raw_file = dat_dict_raw[fname]
@@ -133,6 +134,7 @@ def find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio):
 
 
 def piggy_back(pulse_delta, drop_ratio, below_drop_ratio):
+    '''Checks for the piggy back pulses, and removes them as needed'''
     for file in dat_files:
         piggy_pulse[file] = []
         for x in range(len(pulses[file])-1):
@@ -174,7 +176,7 @@ def find_area(pulses, width):
 
 def main():
     dat_parser()
-    ini_parser('gage2scope.ini')  # sys.argv[1] for final product
+    ini_parser(sys.argv[1])
     vt = int(ini_file['vt'])
     width = int(ini_file['width'])
     pulse_delta = int(ini_file['pulse_delta'])

@@ -41,6 +41,29 @@ def dat_parser():
         dat_files.append(file)
 
 
+def pdf_output():
+    for fname in dat_files:
+        with PdfPages(path + fname.replace('.dat', '.pdf')) as export_pdf:
+            raw_file = dat_dict_raw[fname]
+            plot1 = plt.figure()
+            plt.title(fname)
+            plt.ylabel('Raw')
+            plt.plot(raw_file)
+            plt.axis([0, len(raw_file), min(raw_file), max(raw_file)])
+            plt.show()
+            export_pdf.savefig(plot1)
+            plt.close()
+
+            smooth_file = dat_dict_smooth[fname]
+            plot2 = plt.figure()
+            plt.ylabel('Smooth')
+            plt.plot(smooth_file)
+            plt.axis([0, len(smooth_file), min(smooth_file), max(smooth_file)])
+            plt.show()
+            export_pdf.savefig(plot2)
+            plt.close()
+
+
 def create_jagged():
     ''''When adjacentpulses begin within pulse_deltapositions of each other,
     find how many points between the peak of the first pulse and the start of the second pulse
@@ -53,15 +76,6 @@ def create_jagged():
                 raw_dat_data.append(int(data) * -1)
             dat_dict_raw[dat_files[x]] = raw_dat_data
             raw_dat_data = arr.array('i', [])
-    # Creates pdf for each raw graph
-    #for fname in dat_dict_raw:
-    #    file = dat_dict_raw[fname]
-    #    plot1 = plt.figure()
-    #    plt.plot(file)
-    #    plt.axis([0, len(file), min(file), max(file)])
-    #    # plt.show()
-    #    plot1.savefig(path + fname.replace('.dat', '_raw.pdf'),
-    #                  bbox_inches='tight')
 
 
 def create_smooth():
@@ -86,15 +100,6 @@ def create_smooth():
                 s_data.append(dat_dict_raw[file][x])
         dat_dict_smooth[file] = s_data
         s_data = arr.array('i', [])
-     # Creates pdf for each smooth graph
-    #for fname in dat_dict_smooth:
-    #    file = dat_dict_smooth[fname]
-    #    plot1 = plt.figure()
-    #    plt.plot(file)
-    #    plt.axis([0, len(file), min(file), max(file)])
-    #    # plt.show()
-    #    plot1.savefig(path + fname.replace('.dat',
-    #                                       '_smooth.pdf'), bbox_inches='tight')
 
 
 def find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio):
@@ -179,13 +184,15 @@ def main():
     create_smooth()
     find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio)
     find_area(pulses, width)
+    pdf_output()
     for file in dat_files:
         print(file + ':')
         for x in range(len(piggy_pulse[file])):
             print('Found piggyback at ' + str(piggy_pulse[file][x]))
         for y in range(len(pulses[file])):
-            print(str(pulses[file][y]) +' (' + str(area_dict[file][y]) + ')')
+            print(str(pulses[file][y]) + ' (' + str(area_dict[file][y]) + ')')
         print('\n')
+
 
 if __name__ == '__main__':
     main()

@@ -1,19 +1,24 @@
+'''Analyzes an arbitrary number of .dat files and finds pulses based on
+a user provided .ini file.  Output pulse data to pdfs in working directory
+Create by: Steven Schoebinger 03/27/2021'''
 import array as arr
 import glob
-import itertools
 import os
 import sys
 
+# pylint: disable=invalid-name
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 
+# TODO Try and implement enumerate() instead of range and len (see pylint)
 # [X] Check for any .dat files in directory
 # [X] Make .ini parser
 # [X] Make .dat parser
 # [X] Create jagged data and plot (Find Area) pt_1
 # [] Check for piggyback pt_2
 # [X] Create smoothed data and plot (Find Pulse) pt_1
-# [X] Area is the sum of the of the values starting at the pulse start and going for width values, or till the start of next pulse
+# [X] Area is the sum of the of the values starting at the pulse
+#       start and going for width values, or till the start of next pulse
 
 path = os.path.dirname(os.path.abspath(__file__)) + '/'
 dat_files = []
@@ -85,7 +90,7 @@ def create_smooth():
     (Pi-3 + 2Pi-2 + 3Pi-1 + 3Pi + 3∗Pi+1 + 2Pi+2 + Pi+3)//15'''
     s_data = arr.array('i', [])
     # Set up first 3 values in the smooth array
-    for file in dat_dict_raw.keys():
+    for file in dat_dict_raw:
         for x in range(0, len(dat_dict_raw[file])):
             if x < 3:
                 s_data.append(dat_dict_raw[file][x])
@@ -103,7 +108,7 @@ def create_smooth():
         s_data = arr.array('i', [])
 
 
-def find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio):
+def find_pulse(vt, pulse_delta, drop_ratio, below_drop_ratio):
     '''Find a pulse by looking for a rise over 3 consecutive points (Yi, Yi+1, Yi+2)
     if the rise (Yi+2 - Yi) exceeds vt, then a pulse begins at position i.  After finding
     a pulse, move forward through the data starting at Yi+2 until the sample starts to decrease
@@ -117,11 +122,9 @@ def find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio):
     for file in dat_files:
         pulses[file] = []
         not_considered = []
-        # pulse_start = []
         for y in range(len(dat_dict_smooth[file]) - 2):
             # If a rise over 3 points (yi, yi+1, yi+2) is greater than vt, a pulse starts at i
-            if dat_dict_smooth[file][y+2] - dat_dict_smooth[file][y] > vt and y not in not_considered:
-                #print(dat_dict_smooth[file][y], dat_dict_smooth[file][y+1], dat_dict_smooth[file][y+2], dat_dict_smooth[file][y+3])
+            if dat_dict_smooth[file][y+2]-dat_dict_smooth[file][y] > vt and y not in not_considered:
                 pulses[file].append(y)
                 not_considered.append(dat_dict_smooth[file][y+1])
                 # Traverse from y+2 until a decrease before looking for next pulse
@@ -155,9 +158,10 @@ def piggy_back(pulse_delta, drop_ratio, below_drop_ratio):
             pulses[file].remove(pulse)
 
 
-def find_area(pulses, width):
+def find_area(width):
     '''The area is the sum of the values starting at the pulse start and going for width samples,
-    or until the start of the next pulse, whichever comes first. Use raw data for area computation'''
+    or until the start of the next pulse, whichever comes first. 
+    Use raw data for area computation'''
     file = dat_dict_raw['as_ch01-0537xx_Record1042.dat']
     counter = 0
     area = 0
@@ -175,6 +179,7 @@ def find_area(pulses, width):
 
 
 def main():
+    '''Driver function'''
     dat_parser()
     ini_parser(sys.argv[1])
     vt = int(ini_file['vt'])
@@ -184,8 +189,8 @@ def main():
     below_drop_ratio = float(ini_file['below_drop_ratio'])
     create_jagged()
     create_smooth()
-    find_pulse(vt, width, pulse_delta, drop_ratio, below_drop_ratio)
-    find_area(pulses, width)
+    find_pulse(vt, pulse_delta, drop_ratio, below_drop_ratio)
+    find_area(width)
     pdf_output()
     for file in dat_files:
         print(file + ':')

@@ -4,7 +4,7 @@ Created by: Steven Schoebinger 03/19/2021'''
 import math
 import os
 import sys
-
+from tkinter import *
 # pylint: disable=invalid-name
 # [X] Get input from user to know where to naviage the page
 # [X] Get files offsets to sort pages accordingly
@@ -48,35 +48,43 @@ def down(f, current_page, pages):
     return current_page
 
 
-def up(f, current_page, pages):
+def up(f, t, current_page, pages):
     '''Moves up one page; if at top wrap to the bottom; returns current page after print'''
+    print(current_page)
     if current_page not in [0, 1]:
         current_page -= 1
         print(f'[Page {current_page}]:')
+        t.config(state=NORMAL)
+        t.delete('0.0', END)
         for x in range(len(pages[current_page-1])):
             f.seek(pages[current_page-1][x])
-            print(f.readline(), end='')
-        print('\n')
+            t.insert(END, f.readline())
+        #print('\n')
     # If the current page is the first page
     else:
         current_page = len(pages)
         print(f'[Page {current_page}]:')
+        t.config(state=NORMAL)
+        t.delete('0.0', END)
         for x in range(len(pages[-1])):
             f.seek(pages[-1][x])
-            print(f.readline(), end='')
-        print('\n')
+            t.insert(END, f.readline())
+        #print('\n')
         current_page = len(pages)
+    print(current_page)
     return current_page
 
 
-def top(f, current_page, pages):
+def top(f, t, current_page, pages):
     '''Moves to the top page; returns current page after print'''
     current_page = 1
     print(f'[Page {current_page}]:')
+    t.config(state=NORMAL)
+    t.delete('0.0', END)
     for x in range(len(pages[current_page-1])):
         f.seek(pages[current_page-1][x])
-        print(f.readline(), end='')
-    print('\n')
+        t.insert(END, f.readline())
+    #print('\n')
     return current_page
 
 
@@ -98,9 +106,37 @@ def to_page(f, current_page, pages, command):
     print(f'[Page {current_page}]:')
     for x in range(len(pages[current_page-1])):
         f.seek(pages[current_page-1][x])
-        print(f.readline(), end='')
+        t.insert(END, f.readline())
     print('\n')
     return current_page
+
+def text_gui(file, current_page, pages):
+    # Create display window
+    with open(file, 'r+') as f:
+        root = Tk()
+        toolbar = Frame(root)
+
+        b_quit = Button(toolbar, text='Quit', fg='red', command=quit)
+        print('this ', current_page)
+        t = Text(root, height=20, width=50)
+        b = Button(toolbar, text='Top', command=lambda: top(f, t, current_page, pages), padx='5', pady='5')
+        r = Button(toolbar, text='Up', command=lambda: up(f, t, current_page, pages), padx='5', pady='5')
+        # Start loop to get and process input           
+
+        # Trying to place in center of screen
+        windowWidth = root.winfo_reqwidth()
+        windowHeight = root.winfo_reqheight()
+        posRight = int(root.winfo_screenwidth()/2 - windowWidth/2)
+        posDown = int(root.winfo_screenmmheight() - windowHeight/2)
+
+        t.pack()
+        toolbar.pack()
+        r.pack(side=LEFT)
+        b.pack(side=LEFT)
+        b_quit.pack(side=RIGHT)
+        root.title('Window')
+        root.geometry("300x300+{}+{}".format(posRight, posDown))
+        root.mainloop()
 
 
 def view(file, size):
@@ -112,7 +148,6 @@ def view(file, size):
             # create list of offsets to use for naviagtion
             current_page = 0
             offsets = [0]
-            command = ''
             pages = []
 
             # Gets list of line offsets
@@ -121,47 +156,25 @@ def view(file, size):
             f.seek(offsets.pop())
             print(f.readline(), end='')
 
-            # Print initial view
-            print(f'[Page {current_page+1}]:')
-            for x in range(0, size):
-                f.seek(offsets[x])
-                print(f.readline(), end='')
-            print('\n')
-
             # Gets list of pages with their respective indicies
             start = 0
             stop = size
-            for x in range(math.ceil(len(offsets)/size)):
+            for _ in range(math.ceil(len(offsets)/size)):
                 pages.append(offsets[start:stop])
                 start += size
                 stop += size
             current_page = 1
 
-            # Start loop to get and process input
-            while command != 'q':
-                command = input('Command [u,d,t,b,#,q]: ')
-                # Moves one page down; if at botton wrap to the top
-                if command in ['', 'd']:
-                    current_page = down(f, current_page, pages)
-                # Moves view up 1 page; If at the top, wrap to the bottom
-                elif command == 'u':
-                    current_page = up(f, current_page, pages)
-                # Moves to the top page
-                elif command == 't':
-                    current_page = top(f, current_page, pages)
-                # Moves to the bottom page
-                elif command == 'b':
-                    current_page = bottom(f, current_page, pages)
-                # Move to the specified page number
-                elif command.isdigit() and int(command) <= len(pages) and int(command) > 0:
-                    current_page = to_page(f, current_page, pages, command)
-                elif command.isdigit() and int(command) > len(pages):
-                    current_page = top(f, current_page, pages)
-                elif '-' in command or command == '0':
-                    current_page = bottom(f, current_page, pages)
+            text_gui(file, current_page, pages)
+
+
+            
+
     else:
         print('File is empty!')
         sys.exit()
+
+
 
 
 if __name__ == '__main__':

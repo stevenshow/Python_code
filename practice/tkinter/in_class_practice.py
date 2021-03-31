@@ -6,7 +6,7 @@ import string
 path = os.path.dirname(os.path.abspath(__file__)) + '/'
 
 def change_text():
-    var.set(random.randint(10, 100))
+    t.insert(END, random.randint(10, 100))
 
 def read_file():
     lines= []
@@ -16,11 +16,14 @@ def read_file():
                 lines.append(ele)
     except:
         var.set('Could not find file.')
-    var.set(''.join(lines))
+    
+    t.config(state=NORMAL)
+    t.insert(END, 'Deleting...')
+    t.delete('0.0', END)
+    t.insert(END, ''.join(lines))
 
 root = Tk()
 toolbar = Frame(root)
-toolbar.pack()
 
 # Trying to place in center of screen
 windowWidth = root.winfo_reqwidth()
@@ -31,9 +34,14 @@ posDown = int(root.winfo_screenmmheight() - windowHeight/2)
 b_quit = Button(toolbar, text='Quit', fg='red', command=quit)
 var = StringVar()
 var.set('Click to get random number')
-b = Button(toolbar, text='Change Number', command=change_text, padx='5', pady='5')
-r = Button(toolbar, text='Read text.txt file', command=read_file, padx='5', pady='5')
+t = Text(root, height=20, width=50)
+b = Button(toolbar, text='Change Number', command=change_text(), padx='5', pady='5')
+r = Button(toolbar, text='Read text.txt file', command=read_file(), padx='5', pady='5')
 w = Label(root, textvariable=var)
+
+
+t.pack()
+toolbar.pack()
 r.pack(side=LEFT)
 b.pack(side=LEFT)
 w.pack()

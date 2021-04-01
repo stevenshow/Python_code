@@ -5,6 +5,7 @@ import math
 import os
 import sys
 from tkinter import *
+import tkinter.simpledialog as simpledialog
 # pylint: disable=invalid-name
 # [X] Get input from user to know where to naviage the page
 # [X] Get files offsets to sort pages accordingly
@@ -17,7 +18,7 @@ from tkinter import *
 path = os.path.dirname(os.path.abspath(sys.argv[0])) + '/'
 fname = path + 'yankee.txt'
 view_size = 20
-
+current_page = 0
 # If a command line argument is passed
 if len(sys.argv) > 1:
     fname = path + sys.argv[1]
@@ -28,114 +29,137 @@ if len(sys.argv) > 1:
         view_size = 20
 
 
-def down(f, current_page, pages):
+def down(f, t, root, pages):
     '''Moves one page down; if at botton wrap to the top; returns current page after print'''
+    global current_page
     if current_page <= len(pages) - 1:
         current_page += 1
-        print(f'[Page {current_page}]:')
+        t.config(state=NORMAL)
+        t.delete('1.0', END)
         for x in range(len(pages[current_page-1])):
             f.seek(pages[current_page-1][x])
-            print(f.readline(), end='')
-        print('\n')
+            t.insert(END, f.readline())
+        root.title('yankee.txt - Page ' + str(current_page))
     # If the current page is the last page
     else:
         current_page = 1
-        print(f'[Page {current_page}]:')
-        for x in range(len(pages[current_page-1])):
-            f.seek(pages[current_page-1][x])
-            print(f.readline(), end='')
-        print('\n')
-    return current_page
-
-
-def up(f, t, current_page, pages):
-    '''Moves up one page; if at top wrap to the bottom; returns current page after print'''
-    print(current_page)
-    if current_page not in [0, 1]:
-        current_page -= 1
-        print(f'[Page {current_page}]:')
         t.config(state=NORMAL)
-        t.delete('0.0', END)
+        t.delete('1.0', END)
         for x in range(len(pages[current_page-1])):
             f.seek(pages[current_page-1][x])
             t.insert(END, f.readline())
-        #print('\n')
+        root.title('yankee.txt - Page ' + str(current_page))
+    return current_page
+
+
+def up(f, t, root, pages):
+    '''Moves up one page; if at top wrap to the bottom; returns current page after print'''
+    global current_page
+    if current_page not in [0, 1]:
+        current_page -= 1
+        t.config(state=NORMAL)
+        t.delete('1.0', END)
+        for x in range(len(pages[current_page-1])):
+            f.seek(pages[current_page-1][x])
+            t.insert(END, f.readline())
+        root.title('yankee.txt - Page ' + str(current_page))
     # If the current page is the first page
     else:
         current_page = len(pages)
-        print(f'[Page {current_page}]:')
         t.config(state=NORMAL)
-        t.delete('0.0', END)
+        t.delete('1.0', END)
         for x in range(len(pages[-1])):
             f.seek(pages[-1][x])
             t.insert(END, f.readline())
-        #print('\n')
-        current_page = len(pages)
-    print(current_page)
-    return current_page
+        root.title('yankee.txt - Page ' + str(current_page))
 
-
-def top(f, t, current_page, pages):
+def top(f, t, root, pages):
     '''Moves to the top page; returns current page after print'''
+    global current_page
     current_page = 1
-    print(f'[Page {current_page}]:')
     t.config(state=NORMAL)
-    t.delete('0.0', END)
+    t.delete('1.0', END)
     for x in range(len(pages[current_page-1])):
         f.seek(pages[current_page-1][x])
         t.insert(END, f.readline())
-    #print('\n')
-    return current_page
+    root.title('yankee.txt - Page ' + str(current_page))
 
-
-def bottom(f, current_page, pages):
+def bottom(f, t, root, pages):
     '''Moves to the bottom page; returns current page after print'''
+    global current_page
     current_page = len(pages)
-    print(f'[Page {current_page}]:')
+    t.config(state=NORMAL)
+    t.delete('1.0', END)
     for x in range(len(pages[-1])):
         f.seek(pages[-1][x])
-        print(f.readline(), end='')
-    print('\n')
-    current_page = len(pages)
-    return current_page
+        t.insert(END, f.readline())
+    root.title('yankee.txt - Page ' + str(current_page))
 
-
-def to_page(f, current_page, pages, command):
+def to_page(f, t, root, pages):
     '''Moves to the page passed by user; returns current page after print'''
-    current_page = int(command)
-    print(f'[Page {current_page}]:')
+    global current_page
+    current_page = int(simpledialog.askinteger("Page Number", "Enter page number"))
+    while current_page > 100 or current_page < 0:
+        current_page = int(simpledialog.askinteger("Page Number", "Enter page number"))
+    if current_page == 0:
+        current_page = 1
+    t.config(state=NORMAL)
+    t.delete('1.0', END)
     for x in range(len(pages[current_page-1])):
         f.seek(pages[current_page-1][x])
         t.insert(END, f.readline())
-    print('\n')
-    return current_page
+    root.title('yankee.txt - Page ' + str(current_page))
+    
 
-def text_gui(file, current_page, pages):
-    # Create display window
+def text_gui(file, pages, size, offsets):
+    # [X] Create display window
+    # [X] Create all buttons and link them to functions
+    # [X] Create Horizontal scrollbar
+    # [X] Receive input from user for page jumping
+    # [X] Display correct page without wrapping
+
+    global current_page
     with open(file, 'r+') as f:
         root = Tk()
         toolbar = Frame(root)
-
+        # Creation of all buttons
+        t = Text(root, height=20, width=50, wrap='none')
+        top_b = Button(toolbar, text='Top', command=lambda: top(f, t, root, pages), padx='5', pady='5')
+        up_b = Button(toolbar, text='Up', command=lambda: up(f, t, root, pages), padx='5', pady='5')
+        down_b = Button(toolbar, text='Down', command=lambda: down(f, t, root, pages), padx='5', pady='5')
+        bottom_b = Button(toolbar, text='Bottom', command=lambda: bottom(f, t, root, pages), padx='5', pady='5')
+        # Get user response for page number
+        page_b = Button(toolbar, text='Page', command=lambda: to_page(f, t, root, pages), padx='5', pady='5')
         b_quit = Button(toolbar, text='Quit', fg='red', command=quit)
-        print('this ', current_page)
-        t = Text(root, height=20, width=50)
-        b = Button(toolbar, text='Top', command=lambda: top(f, t, current_page, pages), padx='5', pady='5')
-        r = Button(toolbar, text='Up', command=lambda: up(f, t, current_page, pages), padx='5', pady='5')
-        # Start loop to get and process input           
 
+        # Start loop to get and process input           
         # Trying to place in center of screen
         windowWidth = root.winfo_reqwidth()
         windowHeight = root.winfo_reqheight()
         posRight = int(root.winfo_screenwidth()/2 - windowWidth/2)
         posDown = int(root.winfo_screenmmheight() - windowHeight/2)
-
+        
+        # Horizontal Scrollbar
         t.pack()
+        scrollbar = Scrollbar(root, orient='horizontal')
+        scrollbar.pack(side=BOTTOM, fill=X)
+        t.config(xscrollcommand=scrollbar.set)
+        scrollbar.config(command=t.xview)
+        
+        # All buttons and main window
         toolbar.pack()
-        r.pack(side=LEFT)
-        b.pack(side=LEFT)
-        b_quit.pack(side=RIGHT)
-        root.title('Window')
-        root.geometry("300x300+{}+{}".format(posRight, posDown))
+        top_b.pack(side=LEFT)
+        up_b.pack(side=LEFT)
+        down_b.pack(side=LEFT)
+        bottom_b.pack(side=LEFT)
+        page_b.pack(side=LEFT)
+        b_quit.pack(side=LEFT)
+        root.title('yankee.txt - Page ' + str(current_page))
+        root.geometry("400x400+{}+{}".format(posRight, posDown))
+        # Print initial view
+        for x in range(0, size):
+            f.seek(offsets[x])
+            t.insert(END, f.readline())
         root.mainloop()
 
 
@@ -143,6 +167,7 @@ def view(file, size):
     '''Finds the line offsets of the file and then places them in a list.
     Uses that list to create pages based on view_size'''
     # Checks if the file is empty
+    global current_page
     if os.path.getsize(file) != 0:
         with open(file, 'r+') as f:
             # create list of offsets to use for naviagtion
@@ -165,16 +190,11 @@ def view(file, size):
                 stop += size
             current_page = 1
 
-            text_gui(file, current_page, pages)
-
-
-            
+        text_gui(file, pages, size, offsets)
 
     else:
         print('File is empty!')
         sys.exit()
-
-
 
 
 if __name__ == '__main__':

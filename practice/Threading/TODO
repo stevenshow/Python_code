@@ -1,0 +1,5 @@
+Access Key: g0Xcfde0Oyi_1o-GwT2LhioCdlVCmHZyl3zgMq3HnJM
+Secret Key: 59n5aez88K7G0ErGoub9BkdxVPeOkVcEnurgC4T_oVc
+
+Create a threading script that downloads x amount of images from unsplash based on search parameters.  Process those images and get only the ones that are suitable for a desktop background.  Set the desktop background.  Do this everyday at x time.
+Possibly run a script after the photos have been downloaded that switches the background to one of the pictures in the folder. 

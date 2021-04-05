@@ -4,10 +4,10 @@ class HayStack():
     def __init__(self, url, depth):
         super().__init__()
     
-    def lookup():
+    def lookup(self, w):
         pass
 
-    def compute_ranks(self,graph):
+    def compute_ranks(self, graph):
         d = 0.85
         # probability that surfer will bail
         numloops = 10
@@ -26,6 +26,10 @@ class HayStack():
             ranks = newranks
         self.ranks = ranks
 
+    def index():
+        pass
+    
+    def 
 
 
 

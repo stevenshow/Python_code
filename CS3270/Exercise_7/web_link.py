@@ -1,10 +1,20 @@
 import pprint
+'''
+[X] Class received URL and optional depth (defaul to 3)
+[] processing starting webpage and find all embedded webpage 
+[] Index() maps every word (alphanumeric and apostrophes) to a list of URLS of pages that contain that word
+[] Graph() maps every URL to a list of web pages it links to directly
+[] Lookup() takes a word and searches and returns the webpages that contain that word in RANK ORDER, highest to lowest
+[] Do not crawl the webpage twice
+[] DO NOT USE Beautiful Soup, Scrapy, or any other web crawler. use urllib.request or requests
+'''
+
 
 class HayStack():
-    def __init__(self, url, depth):
+    def __init__(self, url, depth=3):
         super().__init__()
     
-    def lookup(self, w):
+    def lookup(self, word):
         pass
 
     def index(self):

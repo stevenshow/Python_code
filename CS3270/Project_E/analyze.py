@@ -7,10 +7,10 @@ import os
 import sys
 
 # pylint: disable=invalid-name
+# pylint: disable=consider-using-enumerate
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 
-# TODO Try and implement enumerate() instead of range and len (see pylint)
 # [X] Check for any .dat files in directory
 # [X] Make .ini parser
 # [X] Make .dat parser

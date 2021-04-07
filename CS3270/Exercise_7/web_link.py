@@ -4,7 +4,13 @@ class HayStack():
     def __init__(self, url, depth):
         super().__init__()
     
-    def lookup():
+    def lookup(self, w):
+        pass
+
+    def index(self):
+        pass
+    
+    def graph(self):
         pass
 
     def compute_ranks(self,graph):

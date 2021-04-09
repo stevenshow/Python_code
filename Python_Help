@@ -1,0 +1,5 @@
+dict.setdefault(key, []).append(value) 
+    # Creates a dictionary with a default value if none exist, else appends item to dict (or whatever other operator you are using on the data structure)
+    link to stack overflow = t.ly/YH5B
+    link to docs = t.ly/MN64
+

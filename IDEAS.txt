@@ -1,0 +1,3 @@
+Createa a webscraper that will go to "https://www.allsides.com/media-bias/media-bias-ratings" and also get input from the users
+as to what media sites they see or use daily/frequently.  Then scrape the site and give them a percentage/score of how biased their
+overall daily media intake is.

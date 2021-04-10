@@ -38,6 +38,8 @@ class HayStack():
         self.depth = depth
         self.crawled_depth = 0
         self.crawled.append(self.url)
+        self.url_regex = '<a[^>]* href *= *\"([^\"]*)'
+        self.text_regex = '([a-zA-Z\']+(?![^<>]*>))'
     
     def grapher(self):
         pass
@@ -78,7 +80,7 @@ def get_URL(url):
     graph = {}
     index = {}
     url_regex = "<a[^>]* href *= *\"([^\"]*)"
-    text_regex = ""
+    text_regex = "([a-zA-Z\']+(?![^<>]*>))"
     depth = 4
     crawl_depth = 0
     
@@ -121,8 +123,27 @@ def get_URL(url):
     print('graph')
     pprint.pprint(graph)
 
+def text_grab(url):
+    start_url = url
+    crawled = []
+    to_crawl = []
+    index = {}
+    url_regex = "<a[^>]* href *= *\"([^\"]*)"
+    text_regex = "([a-zA-Z\']+(?![^<>]*>))"
+    
+    try:
+        reqs = requests.get(start_url, headers={'user-agent': 'XY'})
+        crawled.append(start_url)
+        content = reqs.content.decode('utf-8')
+        #print(content)
+        match = re.findall(text_regex, content.lower())
+    except requests.exceptions.RequestException as e:
+        raise SystemExit(e)
+    # Make match a set so that there are no duplicate words
+    print(set(match))
 
-get_URL('http://freshsources.com/page1.html')
+text_grab('http://freshsources.com/page1.html')
+#get_URL('http://freshsources.com/page1.html')
 
 
 # if __name__ == '__main__':

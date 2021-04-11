@@ -36,16 +36,63 @@ class HayStack():
         self.crawled = []
         self.to_crawl = []
         self.depth = depth
-        self.crawled_depth = 0
+        self.crawl_depth = 0
         self.crawled.append(self.url)
         self.url_regex = '<a[^>]* href *= *\"([^\"]*)'
         self.text_regex = '([a-zA-Z\']+(?![^<>]*>))'
+        try:
+            reqs = requests.get(self.url, headers={'user-agent': 'XY'})
+            self.crawled.append(self.url)
+            content = reqs.content.decode('utf-8')
+            links = re.findall(self.url_regex, content)
+            self.crawl_depth += 1
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+        # Get first page URLs to store in to_crawl
+        self.graph[self.url] = []
+        for link in links:
+            self.to_crawl.append(link)
+            self.graph[self.url].append(link)
+        self.grapher()
+        self.compute_ranks(self.graph)
     
     def grapher(self):
-        pass
-
-    def indexer(self):
-        pass
+        while(self.crawl_depth <= self.depth):
+            for page in self.to_crawl:
+                if page not in self.crawled:
+                    self.indexer(page,self.index)
+                    self.graph[page] = []
+                    try:
+                        reqs = requests.get(page, headers={'user-agent': 'XY'})
+                        self.crawled.append(page)
+                        content = reqs.content.decode('utf-8')
+                        links = re.findall(self.url_regex, content)
+                        for link in links:
+                            if link not in self.to_crawl and link not in self.crawled:
+                                self.to_crawl.append(link)
+                            if link not in self.graph[page]:
+                                self.graph[page].append(link)
+                        self.crawl_depth += 1
+                        self.to_crawl.remove(page)
+                    except requests.exceptions.RequestException as e:
+                        raise SystemExit(e)
+                else:
+                    self.to_crawl.remove(page)
+        
+    def indexer(self, page, index):
+        print('made it')
+        try:
+            reqs = requests.get(page, headers={'user-agent': 'XY'})
+            content = reqs.content.decode('utf-8')
+            #print(content)
+            match = re.findall(self.text_regex, content.lower())
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+        # Make match a set so that there are no duplicate words
+        #print(set(match))
+        matches = set(match)
+        for word in matches:
+            index.setdefault(word, []).append(page)
 
     def lookup(self, word):
         '''Takes str(word) as search key and outputs the webpages
@@ -72,91 +119,93 @@ class HayStack():
         self.ranks = ranks
 
 
-def get_URL(url):
-    # Get initial webpage
-    start_url = url
-    crawled = []
-    to_crawl = []
-    graph = {}
-    index = {}
-    url_regex = "<a[^>]* href *= *\"([^\"]*)"
-    text_regex = "([a-zA-Z\']+(?![^<>]*>))"
-    depth = 4
-    crawl_depth = 0
+# def get_URL(url):
+#     # Get initial webpage
+#     start_url = url
+#     self.crawled = []
+#     to_crawl = []
+#     graph = {}
+#     index = {}
+#     url_regex = "<a[^>]* href *= *\"([^\"]*)"
+#     text_regex = "([a-zA-Z\']+(?![^<>]*>))"
+#     depth = 4
+#     crawl_depth = 0
     
-    # In the constructor
-    try:
-        reqs = requests.get(start_url, headers={'user-agent': 'XY'})
-        crawled.append(start_url)
-        content = reqs.content.decode('utf-8')
-        match = re.findall(url_regex, content)
-        crawl_depth += 1
-    except requests.exceptions.RequestException as e:
-        raise SystemExit(e)
-    # Get first page URLs to store in to_crawl
-    graph[start_url] = []
-    for ele in match:
-        to_crawl.append(ele)
-        graph[start_url].append(ele)
+#     # In the constructor
+#     try:
+#         reqs = requests.get(start_url, headers={'user-agent': 'XY'})
+#         crawled.append(start_url)
+#         content = reqs.content.decode('utf-8')
+#         links = re.findall(url_regex, content)
+#         crawl_depth += 1
+#     except requests.exceptions.RequestException as e:
+#         raise SystemExit(e)
+#     # Get first page URLs to store in to_crawl
+#     graph[start_url] = []
+#     for link in links:
+#         to_crawl.append(link)
+#         graph[start_url].append(link)
+#     text_grab(start_url, index)
     
-    # In the grapher function
-    while(crawl_depth <= depth):
-        for page in to_crawl:
-            if page not in crawled:
-                graph[page] = []
-                try:
-                    reqs = requests.get(page, headers={'user-agent': 'XY'})
-                    crawled.append(page)
-                    content = reqs.content.decode('utf-8')
-                    match = re.findall(url_regex, content)
-                    for ele in match:
-                        if ele not in to_crawl and ele not in crawled:
-                            to_crawl.append(ele)
-                        if ele not in graph[page]:
-                            graph[page].append(ele)
-                    crawl_depth += 1
-                    to_crawl.remove(page)
-                except requests.exceptions.RequestException as e:
-                    raise SystemExit(e)
-            else:
-                to_crawl.remove(page)
-    print('graph')
-    pprint.pprint(graph)
+#     # In the grapher function
+#     while(crawl_depth <= depth):
+#         for page in to_crawl:
+#             if page not in crawled:
+#                 text_grab(page,index)
+#                 graph[page] = []
+#                 try:
+#                     reqs = requests.get(page, headers={'user-agent': 'XY'})
+#                     crawled.append(page)
+#                     content = reqs.content.decode('utf-8')
+#                     links = re.findall(url_regex, content)
+#                     for link in links:
+#                         if link not in to_crawl and link not in crawled:
+#                             to_crawl.append(link)
+#                         if link not in graph[page]:
+#                             graph[page].append(link)
+#                     crawl_depth += 1
+#                     to_crawl.remove(page)
+#                 except requests.exceptions.RequestException as e:
+#                     raise SystemExit(e)
+#             else:
+#                 to_crawl.remove(page)
 
-def text_grab(url):
-    start_url = url
-    crawled = []
-    to_crawl = []
-    index = {}
-    url_regex = "<a[^>]* href *= *\"([^\"]*)"
-    text_regex = "([a-zA-Z\']+(?![^<>]*>))"
+#     print('graph')
+#     pprint.pprint(graph)
+#     pprint.pprint(index)
+
+# def text_grab(url, index):
+#     url_regex = "<a[^>]* href *= *\"([^\"]*)"
+#     text_regex = "([a-zA-Z\']+(?![^<>]*>))"
     
-    try:
-        reqs = requests.get(start_url, headers={'user-agent': 'XY'})
-        crawled.append(start_url)
-        content = reqs.content.decode('utf-8')
-        #print(content)
-        match = re.findall(text_regex, content.lower())
-    except requests.exceptions.RequestException as e:
-        raise SystemExit(e)
-    # Make match a set so that there are no duplicate words
-    print(set(match))
+#     try:
+#         reqs = requests.get(url, headers={'user-agent': 'XY'})
+#         content = reqs.content.decode('utf-8')
+#         #print(content)
+#         match = re.findall(text_regex, content.lower())
+#     except requests.exceptions.RequestException as e:
+#         raise SystemExit(e)
+#     # Make match a set so that there are no duplicate words
+#     #print(set(match))
+#     matches = set(match)
+#     for word in matches:
+#         index.setdefault(word, []).append(url)
 
-text_grab('http://freshsources.com/page1.html')
-#get_URL('http://freshsources.com/page1.html')
+
+# get_URL('http://freshsources.com/page1.html')
 
 
-# if __name__ == '__main__':
-#     engine = HayStack('http://freshsources.com/page1.html', 4)
-#     for w in ['pages', 'links', 'you', 'have', 'I']:
-#         print(w)
-#         pprint.pprint(engine.lookup(w))
-#         print()
-#         print('index:')
-#         pprint.pprint(engine.index)
-#         print()
-#         print('graph:')
-#         pprint.pprint(engine.graph)
-#         print()
-#         print('ranks:')
-#         pprint.pprint(engine.ranks)
+if __name__ == '__main__':
+    engine = HayStack('http://freshsources.com/page1.html', 4)
+    # for w in ['pages', 'links', 'you', 'have', 'I']:
+    #     print(w)
+    #     pprint.pprint(engine.lookup(w))
+    #     print()
+    print('index:')
+    pprint.pprint(engine.index)
+    print()
+    print('graph:')
+    pprint.pprint(engine.graph)
+    print()
+    print('ranks:')
+    pprint.pprint(engine.ranks)

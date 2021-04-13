@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> e3fb4ce6a541feac8d9e79a96268b1118b4aa3e5
 '''Accepts a url and a depth.  Proceeds to crawl all the links on the webpags down
 to the crawl depth.  Maps all URLs to the webpages they link to directly.  Maps all
 alphabetic words with or without apostrophes to the webpages they were found on.
@@ -147,4 +150,8 @@ if __name__ == '__main__':
     pprint.pprint(engine.graph)
     print()
     print('ranks:')
+<<<<<<< HEAD
     pprint.pprint(engine.ranks)
+=======
+    pprint.pprint(engine.ranks)
+>>>>>>> e3fb4ce6a541feac8d9e79a96268b1118b4aa3e5

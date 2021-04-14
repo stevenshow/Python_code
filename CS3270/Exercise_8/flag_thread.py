@@ -1,3 +1,7 @@
+# [X] Download all flag files into a local directory named flags
+# [] Report the number of bytes downloaded•
+# [X] Report the execution time of the script(using time.perf_counter())•
+# [X] Report the CPU time of the script (using time.process_time())
 # TODO Need to figure out how to properly report bytes downloaded
 import os
 import requests
@@ -15,7 +19,7 @@ def get_flag(country):
     flag_name = country+ '.jpg'
     headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36'}
     image = requests.get('https://www.sciencekids.co.nz/images/pictures/flags96/' + flag_name,headers=headers)
-    print(len(image.content))
+    print(image.headers['Content-Length'])
     open(img_path + flag_name, 'wb+').write(image.content)
 
 

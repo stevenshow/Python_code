@@ -41,14 +41,14 @@ def p_pool_exec():
     with concurrent.futures.ProcessPoolExecutor() as executor:
         results = executor.map(get_flag, flags)
     print(type(results))
-    #sum_bytes = sum(results)
+    sum_bytes = sum(results)
     end = perf_counter()
     cpu_end = process_time()
     print(
         f'Multi-Process elapsed CPU Time: {round(cpu_end-cpu_start, 2)} seconds.')
     print(f'Multi-Process elapsed Time: {round(end-start,2)} seconds.')
     # 405.652 Kbs
-    print(f'Amount of bytes downloaded: {round(4080000/1024, 3)} Kbs')
+    print(f'Amount of bytes downloaded: {round(sum_bytes/1024, 3)} Kbs')
 
 
 p_pool_exec()

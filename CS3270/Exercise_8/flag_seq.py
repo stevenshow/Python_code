@@ -28,12 +28,12 @@ def get_flags():
     sum_filesizes = 0
     for country in flags:
         flag_name = country + '.jpg'
-        headers = {
-            '''User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36
-                (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36'''}
+        # headers = {
+        #     '''User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36\
+        #         (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36'''}
         image = requests.get(
-            'https://www.sciencekids.co.nz/images/pictures/flags96/' + flag_name, headers=headers)
-        # print(image.headers['Content-Length'])
+            'https://www.sciencekids.co.nz/images/pictures/flags96/' + flag_name)
+        #print(image.headers['Content-Length'])
         sum_filesizes += int(image.headers["Content-Length"])
         open(img_path + flag_name, 'wb+').write(image.content)
     end = perf_counter()

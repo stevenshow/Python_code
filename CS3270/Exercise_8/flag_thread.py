@@ -31,11 +31,10 @@ flags.pop()
 def get_flag(country):
     '''Makes get requests for the flag of the country passed.'''
     flag_name = f'{country}.jpg'
-    headers = {
-        '''User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36
-            (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36'''}
+    # headers = {
+    #     '''User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36'''}
     image = requests.get(
-        'https://www.sciencekids.co.nz/images/pictures/flags96/' + flag_name, headers=headers)
+        'https://www.sciencekids.co.nz/images/pictures/flags96/' + flag_name)
     with open(img_path + flag_name, 'wb+') as img:
         img.write(image.content)
     return int(image.headers['Content-Length'])
@@ -62,9 +61,9 @@ def send_mail():
     '''Sends email to professor with United States flag as attachment'''
     context = ssl.create_default_context()
     smtp_server = 'smtp.gmail.com'
-    sender_email = 'programmer.steve7@gmail.com'
-    password = 'python_programming_is_fun7'
-    receiver_email = 'chuck.allison@gmail.com'
+    sender_email = os.environ.get('PROG_GMAIL')
+    password = os.environ.get('GMAIL_PASS')
+    receiver_email = 'steven.schoebinger@gmail.com'
     message = MIMEMultipart('alternative')
     message['Subject'] = 'Exercise 8'
     message['From'] = 'Steven Schoebinger'
@@ -83,4 +82,4 @@ def send_mail():
 
 
 t_pool_submit()
-send_mail()
+#send_mail()

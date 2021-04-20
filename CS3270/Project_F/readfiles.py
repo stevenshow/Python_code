@@ -5,7 +5,7 @@ import os
 import sqlite3
 import sys
 
-# pylint: disable=invalid-name
+# pylint: disable=invalid-name                             
 py_path = os.path.dirname(os.path.abspath(sys.argv[0])) + '/'
 path = os.path.dirname(os.path.abspath(sys.argv[0])) + '/' + sys.argv[1]
 db_path = os.path.join(py_path, 'filesdb')
@@ -32,14 +32,12 @@ for root, dirs, files in os.walk(path):
             fname = file.split('.')[0]
             ext = file.split('.')[1]
             path = root
-            cursor.execute('INSERT INTO files VALUES (?,?,?)',
-                           (ext, path, fname))
+            cursor.execute('INSERT INTO files VALUES (?,?,?)', (ext, path, fname))
         else:
             fname = file
             ext = None
             path = root
-            cursor.execute('INSERT INTO files VALUES (?,?,?)',
-                           (ext, path, fname))
+            cursor.execute('INSERT INTO files VALUES (?,?,?)', (ext, path, fname))
 
 # Get all data from database
 cursor.execute('SELECT * FROM files')

@@ -1,9 +1,11 @@
 '''Script that takes a command line argument of the directory name that you would like
 to traverse and store each file in the created database.
 Created by: Steven Schoebinger 04/20/2021'''
+import os
 import sqlite3
-import os, sys
-                              
+import sys
+
+# pylint: disable=invalid-name
 py_path = os.path.dirname(os.path.abspath(sys.argv[0])) + '/'
 path = os.path.dirname(os.path.abspath(sys.argv[0])) + '/' + sys.argv[1]
 db_path = os.path.join(py_path, 'filesdb')
@@ -30,12 +32,14 @@ for root, dirs, files in os.walk(path):
             fname = file.split('.')[0]
             ext = file.split('.')[1]
             path = root
-            cursor.execute('INSERT INTO files VALUES (?,?,?)', (ext, path, fname))
+            cursor.execute('INSERT INTO files VALUES (?,?,?)',
+                           (ext, path, fname))
         else:
             fname = file
             ext = None
             path = root
-            cursor.execute('INSERT INTO files VALUES (?,?,?)', (ext, path, fname))
+            cursor.execute('INSERT INTO files VALUES (?,?,?)',
+                           (ext, path, fname))
 
 # Get all data from database
 cursor.execute('SELECT * FROM files')

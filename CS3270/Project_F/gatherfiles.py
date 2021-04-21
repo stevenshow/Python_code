@@ -1,26 +1,28 @@
-import sys
+'''Takes command line arguments for database and extensions
+    Takes extension and searches database for all files with the extension
+    and places them in a zip file {ext}.zip
+    Created by: Steven Schoebinger 04/21/2021'''
 import os
 import sqlite3
+import sys
 from zipfile import ZipFile
-# Get all arguments after the .py file passed and database
-for arg in sys.argv[2:]:
-    print(arg)
 
 def main():
-
+    '''Takes command line arguments for database and extensions
+    Takes extension and searches database for all files with the extension
+    and places them in a zip file {ext}.zip'''
+    path = os.path.dirname(os.path.abspath(sys.argv[0])) + '/'
     connection = sqlite3.connect(sys.argv[1])
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM files WHERE ext = 'cpp'")
-    cpp_files = cursor.fetchall()
-    print(len(cpp_files))
-    cursor.execute("SELECT * FROM files WHERE ext = 'py'")
-    py_files = cursor.fetchall()
-    print(len(py_files))
-    connection.close()
-
-    with ZipFile('cpp.zip', 'w') as cppZip:
-        for file in cpp_files:
-            print(os.path.join(file[1], file[2]))
+    for arg in sys.argv[2:]:
+        cursor.execute(f"SELECT * FROM files WHERE ext = '{arg}'")
+        files = cursor.fetchall()
+        if os.path.exists(path + f'{arg}.zip'):
+            os.remove(path + f'{arg}.zip')
+        with ZipFile(f'{arg}.zip', 'w') as cppZip:
+            for file in files:
+                cppZip.write(os.path.join(file[1], file[2]))
+            print(str(len(files)) + f' {arg} files gathered')
 
 if __name__ == main():
     main()

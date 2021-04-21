@@ -28,7 +28,9 @@ cursor.execute('''CREATE TABLE files (
 for root, dirs, files in os.walk(path):
     # root will get the path to the files
     for file in files:
-        if len(file.split('.')) > 1 and file.split('.')[0] != '':
+        if file.split('.')[0] == '_' or file.split('.')[0] == '':
+            break
+        if len(file.split('.')) > 1:
             fname = file.split('.')[0]
             ext = file.split('.')[1]
             path = root

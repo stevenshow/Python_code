@@ -27,11 +27,13 @@ cursor.execute('''CREATE TABLE files (
 # os.walk will go through each directory and collect all files
 for root, dirs, files in os.walk(path):
     # root will get the path to the files
+    print('entered loop')
     for file in files:
         if file.split('.')[0] == '_' or file.split('.')[0] == '':
             break
         if len(file.split('.')) > 1:
-            fname = file.split('.')[0]
+            fname = file
+            print(fname)
             ext = file.split('.')[1]
             path = root
             cursor.execute('INSERT INTO files VALUES (?,?,?)', (ext, path, fname))
@@ -44,6 +46,9 @@ for root, dirs, files in os.walk(path):
 # Get all data from database
 cursor.execute('SELECT * FROM files')
 rows = cursor.fetchall()
+
+if os.path.exists(py_path + 'files-part1.txt'):
+    os.remove(py_path + 'files-part1.txt')
 
 # Print query to .txt file
 with open(py_path + 'files-part1.txt', 'a+') as f:

@@ -5,10 +5,12 @@ import os
 import sqlite3
 import sys
 
-# pylint: disable=invalid-name                             
+# pylint: disable=invalid-name
+
 
 def main():
-
+    '''Script that takes a command line argument of the directory name that you would like
+    to traverse and store each file in the created database.'''
     py_path = os.path.dirname(os.path.abspath(sys.argv[0])) + '/'
     path = os.path.dirname(os.path.abspath(sys.argv[0])) + '/' + sys.argv[1]
     db_path = os.path.join(py_path, 'filesdb')
@@ -27,7 +29,7 @@ def main():
                 )''')
 
     # os.walk will go through each directory and collect all files
-    for root, dirs, files in os.walk(path):
+    for root, _, files in os.walk(path):
         # root will get the path to the files
         print('entered loop')
         for file in files:
@@ -38,12 +40,14 @@ def main():
                 print(fname)
                 ext = file.split('.')[1]
                 path = root
-                cursor.execute('INSERT INTO files VALUES (?,?,?)', (ext, path, fname))
+                cursor.execute(
+                    'INSERT INTO files VALUES (?,?,?)', (ext, path, fname))
             else:
                 fname = file
                 ext = None
                 path = root
-                cursor.execute('INSERT INTO files VALUES (?,?,?)', (ext, path, fname))
+                cursor.execute(
+                    'INSERT INTO files VALUES (?,?,?)', (ext, path, fname))
 
     # Get all data from database
     cursor.execute('SELECT * FROM files')
@@ -57,10 +61,10 @@ def main():
         for row in rows:
             f.write(str(row) + '\n')
 
-
     connection.commit()
 
     connection.close()
+
 
 if __name__ == '__main__':
     main()

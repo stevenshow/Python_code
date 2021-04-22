@@ -7,6 +7,9 @@ import sqlite3
 import sys
 from zipfile import ZipFile
 
+# pylint: disable=invalid-name
+
+
 def main():
     '''Takes command line arguments for database and extensions
     Takes extension and searches database for all files with the extension
@@ -23,6 +26,7 @@ def main():
             for file in files:
                 cppZip.write(os.path.join(file[1], file[2]))
             print(str(len(files)) + f' {arg} files gathered')
+
 
 if __name__ == main():
     main()

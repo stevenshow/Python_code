@@ -16,7 +16,7 @@ def main():
             fname = f.split('/')
             if re.search(f'{sys.argv[2]}', fname[-1]):
                 count +=1
-                file.extract(f, 'Stuff_Extracted')
+                file.extract(f, 'part3')
         print(str(count) + ' files extracted')
 
 

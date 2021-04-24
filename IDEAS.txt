@@ -1,3 +1,6 @@
 Createa a webscraper that will go to "https://www.allsides.com/media-bias/media-bias-ratings" and also get input from the users
 as to what media sites they see or use daily/frequently.  Then scrape the site and give them a percentage/score of how biased their
 overall daily media intake is.
+
+Be able to store data on weight gain, caloric intake, bmi, on period or not, picture of self, daily journal(happy, sad, etc.)
+Then be able to graph your weight gain over the time you were on your period to off.  

@@ -19,6 +19,14 @@ def compare_lists():
     print(set_diff)
     #while (len(set_diff)):
 
+def dict_add():
+    x = 'Test'
+    y1= 123
+    y2 = 456
+    my_dict = {}
+    my_dict[x] = [y1,y2]
+    print(my_dict)
 
-compare_lists()
+dict_add()
+#compare_lists()
 # dict_lists()

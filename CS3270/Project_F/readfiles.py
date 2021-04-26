@@ -13,7 +13,7 @@ def main():
     to traverse and store each file in the created database.'''
     py_path = os.path.dirname(os.path.abspath(sys.argv[0])) + '/'
     path = os.path.dirname(os.path.abspath(sys.argv[0])) + '/' + sys.argv[1]
-    db_path = os.path.join(py_path, 'filesdb')
+    db_path = os.path.join(py_path, 'filesdb.sqlite3')
     # Create new database each time so the data is always correct
     if os.path.exists(db_path):
         os.remove(db_path)

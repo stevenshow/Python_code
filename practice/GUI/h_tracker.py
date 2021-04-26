@@ -1,4 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+import os
+import sqlite3
 #
 # 
 # TODO Figure out how to save the database file in a user specified location
@@ -12,9 +14,11 @@ class Ui_MainWindow(object):
         self.calories = 0.0
         self.name = ''
         self.date = ''
+        self.path = os.path.dirname(__file__) + '/'
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
+
         MainWindow.resize(640, 480)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -88,6 +92,17 @@ class Ui_MainWindow(object):
         self.name = self.name_input.text()
         self.stats[self.date] = [self.weight, self.calories]
         self.health_dict[self.name] = self.stats
+        self.db_path = os.path.join(self.path, f'{self.name}_trackerdb.sqlite3')
+        
+        self.connection = sqlite3.connect(self.db_path)
+        print('h_trackerdb created successfully!')
+        self.cursor = self.connection.cursor()
+        self.cursor.execute('''CREATE TABLE health_stats (
+                name TEXT,
+                weight REAL,
+                calories REAL,
+                date TEXT
+                )''')
         if self.name == '' or any(char.isdigit() for char in self.name):
             self.dlg = QtWidgets.QDialog(self.centralwidget)
             self.dlg.setWindowTitle('Please Enter a valid Name')
@@ -107,6 +122,10 @@ class Ui_MainWindow(object):
             print(self.health_dict)
             self.instruction.setText(f'Successfully saved data for {self.name}!')
             print('Data has been saved!')
+            self.cursor.execute('''INSERT INTO health_stats VALUES (?,?,?,?)''', (self.name, self.weight, self.calories, self.date))
+            print(self.name, self.weight, self.calories, self.date)
+            self.connection.commit()
+            self.connection.close()
 
 
 if __name__ == "__main__":

@@ -1,0 +1,7 @@
+#Trying to go from machine to server
+$ scp PATH/TO/FILE pi@X.X.X.X:/PATH/TO/DESTINATION
+#If you want to do an entire directory just add 'scp -r' at the beginning
+
+
+#Trying to go from server to machine
+$ scp pi@X.X.X.X:/PATH/TO/FILE /PATH/TO/DESTINATION

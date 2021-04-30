@@ -1,0 +1,3 @@
+#Gets you into crontab edditing
+`crontab -e`
+

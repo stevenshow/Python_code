@@ -6,6 +6,10 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import requests
+import concurrent.futures
+import threading
+import time
+
 
 # API key for the catapi
 
@@ -57,12 +61,12 @@ def get_fact():
 # Sets up the secure email service and places the fact and image to be sent in the email
 
 
-def send_mail():
+def send_mail(receiver_email):
     context = ssl.create_default_context()
     smtp_server = 'smtp.gmail.com'
     sender_email = 'programmer.steve7@gmail.com'
     password = 'python_programming_is_fun7'
-    receiver_email = 'steven.schoebinger@gmail.com'
+    #receiver_email = ['steven.schoebinger@gmail.com', '10627666@my.uvu.edu']
     message = MIMEMultipart('alternative')
     message['Subject'] = 'Daily Cat Fact'
     message['From'] = 'Cat Fax'
@@ -77,7 +81,8 @@ def send_mail():
         server.login(sender_email, password)
         server.sendmail(sender_email, receiver_email, message.as_string())
 
-
+email_list = ['steven.schoebinger@gmail.com', '10627666@my.uvu.edu']
 cat_fact = get_fact()
 get_image()
-send_mail()
+with concurrent.futures.ThreadPoolExecutor(max_workers=min(50, len(email_list))) as executor:
+    results = executor.map(send_mail, email_list)

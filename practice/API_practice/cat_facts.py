@@ -13,8 +13,7 @@ import time
 
 # API key for the catapi
 
-api_key = '2fe5b288-d44d-45b5-ac2e-e8a5d81524db'
-
+#api_key = os.environ.get('CAT_FACT_API')
 path = os.path.dirname(__file__) + '/Images'
 
 # Gets the cat_fact json from the cat-fact api

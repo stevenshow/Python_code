@@ -1,4 +1,4 @@
 #This happens to be the hard coded IP address as of right now through 'duck-dns'
-In terminal run `ssh pi@136.36.14.243`
+In terminal run `ssh pi@136.36.11.84`
 
 

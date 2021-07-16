@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+
 # Create your views here.
+
 def main(request):
-    return HttpResponse("You made it to the API")
+    return HttpResponse("<h1>You made it to the API<h1>")

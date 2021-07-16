@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import main
+from .views import DateView, DateAdd
 
 urlpatterns = [
-    path('', main)
+    path('show/', DateView.as_view()),
+    path('add/', DateAdd.as_view())
 ]

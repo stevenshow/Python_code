@@ -1,7 +1,15 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from rest_framework import generics
+from .serializers import DatesSerializer
+from .models import Dates
 
 # Create your views here.
 
-def main(request):
-    return HttpResponse("<h1>You made it to the API<h1>")
+# Allows viewing and adding dates
+class DateView(generics.ListAPIView):
+    queryset = Dates.objects.all()
+    serializer_class = DatesSerializer
+
+class DateAdd(generics.CreateAPIView):
+    queryset = Dates.objects.all()
+    serializer_class = DatesSerializer

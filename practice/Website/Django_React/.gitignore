@@ -5,6 +5,7 @@
 *.pyc
 __pycache__
 db.sqlite3
+#npm
 media
 node_modules
 build

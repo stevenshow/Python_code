@@ -5,5 +5,4 @@ def get_list(size):
     seed(7)
     data = sample(range(DATA_SIZE * 3), k=DATA_SIZE)
     data.sort()
-    while True:
-        yield data
+    return data

@@ -17,7 +17,7 @@ path = os.path.dirname(__file__)
 
 def get_input():
     length = input('Would you like your password to be 8 or 16 chars long?: ')
-    while(length != '8' and length != '16'):
+    while length not in ('8','16'):
         length = input('Please enter either 8 or 16: ')
     return int(length)
 
@@ -43,7 +43,7 @@ def pass_generator():
     print(password_str)
     copy_to_clip = input(
         'Would you like to copy this password to your clipboard? [Y/N]: ')
-    if (copy_to_clip.lower() == 'y'):
+    if copy_to_clip.lower() == 'y':
         to_clipboard(password_str)
         write_out = input('Would you like to write to a an encrypted file? [Y/N]: ')
         if write_out.lower() == 'y':

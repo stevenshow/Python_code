@@ -102,12 +102,17 @@ class Ui_MainWindow(object):
         self.connection = sqlite3.connect(self.db_path)
         print('h_trackerdb created successfully!')
         self.cursor = self.connection.cursor()
-        self.cursor.execute('''CREATE TABLE health_stats (
-                name TEXT,
-                weight REAL,
-                calories REAL,
-                date TEXT
-                )''')
+        
+        # Checks to make sure the table does not already exist
+        listOfTables = self.cursor.execute(
+        """SELECT * FROM sqlite_master WHERE type='table'; """).fetchall()       
+        if (listOfTables == []):        
+            self.cursor.execute('''CREATE TABLE health_stats (
+                    name TEXT,
+                    weight REAL,
+                    calories REAL,
+                    date TEXT
+                    )''')
         if self.name == '' or any(char.isdigit() for char in self.name):
             self.dlg = QtWidgets.QDialog(self.centralwidget)
             self.dlg.setWindowTitle('Please Enter a valid Name')
@@ -125,9 +130,9 @@ class Ui_MainWindow(object):
             self.dlg.exec_()
         else:
             print(self.health_dict)
+            self.cursor.execute('''INSERT INTO health_stats VALUES (?,?,?,?)''', (self.name, self.weight, self.calories, self.date))
             self.instruction.setText(f'Successfully saved data for {self.name}!')
             print('Data has been saved!')
-            self.cursor.execute('''INSERT INTO health_stats VALUES (?,?,?,?)''', (self.name, self.weight, self.calories, self.date))
             print(self.name, self.weight, self.calories, self.date)
             self.connection.commit()
             self.connection.close()

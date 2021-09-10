@@ -76,6 +76,7 @@ class Ui_MainWindow(object):
         self.Exit_button = QtWidgets.QPushButton(self.centralwidget)
         self.Exit_button.setGeometry(QtCore.QRect(440, 400, 85, 28))
         self.Exit_button.setObjectName("Exit_button")
+        self.Exit_button.clicked.connect(lambda:MainWindow.close())
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -97,7 +98,7 @@ class Ui_MainWindow(object):
         self.name = self.name_input.text()
         self.stats[self.date] = [self.weight, self.calories]
         self.health_dict[self.name] = self.stats
-        self.db_path = os.path.join(self.path, f'{self.name}_trackerdb.sqlite3')
+        self.db_path = os.path.join(self.path, f'{self.name.lower()}_trackerdb.sqlite3')
         
         self.connection = sqlite3.connect(self.db_path)
         print('h_trackerdb created successfully!')
@@ -130,7 +131,7 @@ class Ui_MainWindow(object):
             self.dlg.exec_()
         else:
             print(self.health_dict)
-            self.cursor.execute('''INSERT INTO health_stats VALUES (?,?,?,?)''', (self.name, self.weight, self.calories, self.date))
+            self.cursor.execute('''INSERT INTO health_stats VALUES (?,?,?,?)''', (self.name.lower(), self.weight, self.calories, self.date))
             self.instruction.setText(f'Successfully saved data for {self.name}!')
             print('Data has been saved!')
             print(self.name, self.weight, self.calories, self.date)

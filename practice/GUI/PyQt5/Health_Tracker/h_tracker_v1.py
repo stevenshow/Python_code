@@ -12,14 +12,14 @@ class MainWindow(QMainWindow):
     # Find out easier way to keep name for multiple entries
     def __init__(self):
         super(MainWindow, self).__init__()
-        loadUi('h_tracker.ui', self)
+        self.path = os.path.dirname(__file__) + '/'
+        loadUi(self.path + 'h_tracker.ui', self)
         self.health_dict = {}
         self.stats = {}
         self.weight = 0.0
         self.calories = 0.0
         self.name = ''
         self.date = ''
-        self.path = os.path.dirname(__file__) + '/'
         center_align = QtCore.Qt.AlignCenter
         self.date_input.setAlignment(center_align)
         self.date_input.setDateTime(QtCore.QDateTime.currentDateTime())
@@ -30,9 +30,9 @@ class MainWindow(QMainWindow):
 class DataWindow(QDialog):
     def __init__(self):
         super(DataWindow, self).__init__()
-        loadUi("load_h_tracker.ui", self)
-        self.init_buttons()
         self.path = os.path.dirname(__file__) + '/'
+        loadUi(self.path + "load_h_tracker.ui", self)
+        self.init_buttons()
         
 
     def init_buttons(self):

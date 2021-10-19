@@ -1,7 +1,7 @@
 import requests
 from twilio.rest import Client
-account_sid = 'ACfc24531924305a41062999b18a96c35b'
-auth_token = '0aa5651fe600699cc18efb7ad64bba30'
+account_sid = TWILIO_SID
+auth_token = TWILIO_TOKEN
 
 client = Client(account_sid, auth_token)
 
@@ -14,7 +14,7 @@ Message = 'Hi!  Fun fact, the amount of people in space right now is ' + \
     str(number_iss)
 
 message = client.messages.create(
-    to="+18017094444", 
+    to= MY_PHONE_NUMBER, 
     from_="+19786911313", 
     body=Message)
 print(message.sid)

@@ -63,9 +63,8 @@ def get_fact():
 def send_mail(receiver_email):
     context = ssl.create_default_context()
     smtp_server = 'smtp.gmail.com'
-    sender_email = 'programmer.steve7@gmail.com'
-    password = 'python_programming_is_fun7'
-    #receiver_email = ['steven.schoebinger@gmail.com', '10627666@my.uvu.edu']
+    sender_email = CAT_FACT_EMAIL
+    password = CAT_FACT_EMAIL_PASSWORD
     message = MIMEMultipart('alternative')
     message['Subject'] = 'Daily Cat Fact'
     message['From'] = 'Cat Fax'
@@ -80,7 +79,7 @@ def send_mail(receiver_email):
         server.login(sender_email, password)
         server.sendmail(sender_email, receiver_email, message.as_string())
 
-email_list = ['steven.schoebinger@gmail.com', '10627666@my.uvu.edu']
+email_list = [] 
 cat_fact = get_fact()
 get_image()
 with concurrent.futures.ThreadPoolExecutor(max_workers=min(50, len(email_list))) as executor:

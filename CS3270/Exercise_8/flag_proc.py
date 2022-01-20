@@ -40,7 +40,7 @@ def p_pool_exec():
     cpu_start = process_time()
     with concurrent.futures.ProcessPoolExecutor() as executor:
         results = executor.map(get_flag, flags)
-    print(type(results))
+    #print(type(results))
     sum_bytes = sum(results)
     end = perf_counter()
     cpu_end = process_time()

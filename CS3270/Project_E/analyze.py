@@ -181,7 +181,8 @@ def find_area(width):
 def main():
     '''Driver function'''
     dat_parser()
-    ini_parser(sys.argv[1])
+    print()
+    ini_parser("gage2scope.ini")  #sys.argv[1]
     vt = int(ini_file['vt'])
     width = int(ini_file['width'])
     pulse_delta = int(ini_file['pulse_delta'])
